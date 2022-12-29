@@ -15,79 +15,61 @@
             <div class="row d-flex justify-content-center">
               <div class="col-lg-6">
                 <div
-                  class="login_wrap widget-taber-content p-30 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5"
-                >
+                  class="login_wrap widget-taber-content p-30 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5">
                   <div class="padding_eight_all bg-white">
                     <div class="heading_s1">
                       <h3 class="mb-30">Login</h3>
                     </div>
+
+
                     <%if (locals.blockedStatus){%>
-                      <p style="color: red;">You are blocked by admin </p>
+                      <p style="color: red;" class="message">You are blocked by admin </p>
                       <%}%>
 
-                      <%if(locals.loginStatus==false){%>
-                        <p style="color: red;">Invalid Credentials </p>
+                        <%if(locals.loggedinstatus==false){%>
+                        <p style="color: red;" class="message">Invalid Credentials </p>
                         <%}%>
-                      
-
-                  
-                      
- 
 
 
 
 
-                    <form action="/login" method="post">
-                      <div class="form-group">
-                        <input
-                          type=""
-                          required=""
-                          name="email"
-                          placeholder="Your Email/Mobile Number"
-                        />
-                      </div>
-                      <div class="form-group">
-                        <input
-                          required=""
-                          type="password"
-                          name="password"
-                          placeholder="Password"
-                        />
-                      </div>
-                      <div class="login_footer form-group">
-                        <div class="chek-form">
-                          <div class="custome-checkbox">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              name="checkbox"
-                              id="exampleCheckbox1"
-                              value=""
-                            />
-                            <label
-                              class="form-check-label"
-                              for="exampleCheckbox1"
-                              ><span>Remember me</span></label
-                            >
-                          </div>
-                        </div>
-                        <a class="text-muted" href="#">Forgot password?</a>
-                      </div>
-                      <div class="form-group">
-                        <button
-                          type="submit"
-                          class="btn btn-fill-out btn-block hover-up"
-                          name="login"
-                          style="width: 100%"
-                        >
-                          Log in
-                        </button>
-                      </div>
-                      <div>
-                        <p class="mb-3 text-center text-success">OR</p>
-                      </div>
-                      <div class="form-group">
-                        <!-- <button
+
+
+
+
+
+
+
+
+                          <form action="/login" method="post">
+                            <div class="form-group">
+                              <input type="" required="" name="email" placeholder="Your Email/Mobile Number" />
+                            </div>
+                            <div class="form-group">
+                              <input required="" type="password" name="password" placeholder="Password" />
+                            </div>
+                            <div class="login_footer form-group">
+                              <div class="chek-form">
+                                <div class="custome-checkbox">
+                                  <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1"
+                                    value="" />
+                                  <label class="form-check-label" for="exampleCheckbox1"><span>Remember
+                                      me</span></label>
+                                </div>
+                              </div>
+                              <a class="text-muted" href="#">Forgot password?</a>
+                            </div>
+                            <div class="form-group">
+                              <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login"
+                                style="width: 100%">
+                                Log in
+                              </button>
+                            </div>
+                            <div>
+                              <p class="mb-3 text-center text-success">OR</p>
+                            </div>
+                            <div class="form-group">
+                              <!-- <button
                           type="submit"
                           class="btn btn-fill-out btn-block hover-up"
                           name="login"
@@ -95,14 +77,12 @@
                         >
                           Request OTP
                         </button> -->
-                        <a href="/otp" class="btn btn-warning w-100">Request OTP</a>
-                      </div>
-                      <div>
-                        <a class="ms-5" href="/signup"
-                          >New ? Create An Account</a
-                        >
-                      </div>
-                    </form>
+                              <a href="/otplogin" class="btn btn-warning w-100">Request OTP</a>
+                            </div>
+                            <div>
+                              <a class="ms-5" href="/signup">New ? Create An Account</a>
+                            </div>
+                          </form>
                   </div>
                 </div>
               </div>
@@ -119,11 +99,7 @@
           <div class="col-lg-7 mb-md-3 mb-lg-0">
             <div class="row align-items-center">
               <div class="col flex-horizontal-center">
-                <img
-                  class="icon-email"
-                  src="assets/imgs/theme/icons/icon-email.svg"
-                  alt=""
-                />
+                <img class="icon-email" src="assets/imgs/theme/icons/icon-email.svg" alt="" />
                 <h4 class="font-size-20 mb-0 ml-3">Sign up to Newsletter</h4>
               </div>
               <div class="col my-4 my-md-0 des">
@@ -136,11 +112,7 @@
           <div class="col-lg-5">
             <!-- Subscribe Form -->
             <form class="form-subcriber d-flex wow fadeIn animated">
-              <input
-                type="email"
-                class="form-control bg-white font-small"
-                placeholder="Enter your email"
-              />
+              <input type="email" class="form-control bg-white font-small" placeholder="Enter your email" />
               <button class="btn bg-dark text-white" type="submit">
                 Subscribe
               </button>
@@ -156,9 +128,7 @@
           <div class="col-lg-4 col-md-6">
             <div class="widget-about font-md mb-md-5 mb-lg-0">
               <div class="logo logo-width-1 wow fadeIn animated">
-                <a href="index.html"
-                  ><img src="assets/imgs/theme/logo.svg" alt="logo"
-                /></a>
+                <a href="index.html"><img src="assets/imgs/theme/logo.svg" alt="logo" /></a>
               </div>
               <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">
                 Contact
@@ -176,24 +146,12 @@
               <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">
                 Follow Us
               </h5>
-              <div
-                class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0"
-              >
-                <a href="#"
-                  ><img src="assets/imgs/theme/icons/icon-facebook.svg" alt=""
-                /></a>
-                <a href="#"
-                  ><img src="assets/imgs/theme/icons/icon-twitter.svg" alt=""
-                /></a>
-                <a href="#"
-                  ><img src="assets/imgs/theme/icons/icon-instagram.svg" alt=""
-                /></a>
-                <a href="#"
-                  ><img src="assets/imgs/theme/icons/icon-pinterest.svg" alt=""
-                /></a>
-                <a href="#"
-                  ><img src="assets/imgs/theme/icons/icon-youtube.svg" alt=""
-                /></a>
+              <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
+                <a href="#"><img src="assets/imgs/theme/icons/icon-facebook.svg" alt="" /></a>
+                <a href="#"><img src="assets/imgs/theme/icons/icon-twitter.svg" alt="" /></a>
+                <a href="#"><img src="assets/imgs/theme/icons/icon-instagram.svg" alt="" /></a>
+                <a href="#"><img src="assets/imgs/theme/icons/icon-pinterest.svg" alt="" /></a>
+                <a href="#"><img src="assets/imgs/theme/icons/icon-youtube.svg" alt="" /></a>
               </div>
             </div>
           </div>
@@ -225,26 +183,16 @@
               <div class="col-md-8 col-lg-12">
                 <p class="wow fadeIn animated">From App Store or Google Play</p>
                 <div class="download-app wow fadeIn animated">
-                  <a href="#" class="hover-up mb-sm-4 mb-lg-0"
-                    ><img
-                      class="active"
-                      src="assets/imgs/theme/app-store.jpg"
-                      alt=""
-                  /></a>
-                  <a href="#" class="hover-up"
-                    ><img src="assets/imgs/theme/google-play.jpg" alt=""
-                  /></a>
+                  <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="assets/imgs/theme/app-store.jpg"
+                      alt="" /></a>
+                  <a href="#" class="hover-up"><img src="assets/imgs/theme/google-play.jpg" alt="" /></a>
                 </div>
               </div>
               <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
                 <p class="mb-20 wow fadeIn animated">
                   Secured Payment Gateways
                 </p>
-                <img
-                  class="wow fadeIn animated"
-                  src="assets/imgs/theme/payment-method.png"
-                  alt=""
-                />
+                <img class="wow fadeIn animated" src="assets/imgs/theme/payment-method.png" alt="" />
               </div>
             </div>
           </div>
@@ -288,3 +236,10 @@
     </div>
   </div>
 </section>
+
+
+<script>
+  setTimeout(function () {
+    document.querySelector('.message').style.display = 'none';
+  }, 3000);
+</script

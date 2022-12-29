@@ -68,16 +68,15 @@
                   </li>
                 </ul>
               </li>
-              <%
-               if(!locals.logheader){%>
+                <%if(locals.users){%>
+             
+                <li><i class="fi-rs-user"></i><a href="/logout"><%=users.userName%></a></li>
+                 <%}else {%>
                 <li><i class="fi-rs-user"></i><a href="/login">Log In</a></li>
-
-                <%}
-                else{%>
-                  <li><i class="fi-rs-user"></i><a href="/logout">Log out</a></li>
+                <%}%>
                   
-                  <%}
-                %>
+                
+            
             
             </ul>
           </div>

@@ -1,28 +1,22 @@
-// const adminController=require('../controllers/admincontroller')
 
 
-// var adminStatus
-// module.exports={
+  module.exports={
+    auth:(function(req,res,next){
+        if(req.session.adminloggedIn){
+          next()
+        }else{
+          res.render('admin/login',{layout:'adminlayout'})
+        }
+       
+      }),
+      userauth:(function(req,res,next){
+        if(req.session.loggedIn){
+          next()
+        }else{
+          res.render('user/user')
+        }
+       
+      })
     
-//      sessionChecker:function(req,res,next){
-        
-//     if(req.session.admin){
-        
-
-
-//     next()
     
-//     }else{
-        
-//         if(adminStatus){
-//             res.render('admin/login',{layout:'adminLayout'})
-
-//         }
-      
-    
-//     }
-    
-   
-//   }
-
-// }
+  }

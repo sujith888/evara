@@ -28,7 +28,7 @@ const userschema= new mongoose.Schema({
         unique: true,
       },
       phonenumber:{
-        type:Number,
+        type:String,
         // minlength:10,
         unique:true,
       },
@@ -39,6 +39,7 @@ const userschema= new mongoose.Schema({
      type:Date,
      deafault:Date.now,
    },
+  
    
 })
 const categorySchema= new mongoose.Schema({
@@ -47,8 +48,45 @@ const categorySchema= new mongoose.Schema({
   }
 
 })
+
+ const productSchema=new mongoose.Schema({
+    Productname:{
+      type:String
+    },
+    ProductDescription:{
+      type:String
+    },
+    Quantity:{
+      type:Number
+    },
+    Image:{
+      type:String,
+     
+
+    },
+    Price:{
+  type:Number
+    },
+    category:{
+      type:String
+    }
+    
+
+ })
+
+ const cartSchema=new mongoose.Schema({
+  user: mongoose.Types.ObjectId,
+  cartItems:[{
+   products:  mongoose.Types.ObjectId,
+   Quantity: Number
+  }],
+ })
 module.exports={
  user :mongoose.model('user',userschema),
-  category:mongoose.model('Category',categorySchema)
-   
+category:mongoose.model('Category',categorySchema),
+  product:mongoose.model('product',productSchema),
+  cart:mongoose.model('cart',cartSchema)
 }
+
+
+

@@ -4,8 +4,8 @@
       <div class="col-md-12">
         <h2 class="text-center">Add Product</h2>
         <form
-          action="/admin/add-product"
-          method="post"
+          action="/admin/add_product"
+          method="POST"
           enctype="multipart/form-data"
         >
           <label for="">Prodcut Name</label>
@@ -17,16 +17,18 @@
           <input type="text" name="price" class="form-control" />
 
           <label for="">Category</label>
+          
           <select class="form-select" name="category" id="cars">
-            <option value="volvo">Volvo</option>
+            <% response.forEach(function(response) { %>
+            <option><%=response.CategoryName %></option>
+            <% } )%>
           </select>
-          <label for="">Brand</label>
-          <select class="form-select" name="category" id="cars">
-            <option value="volvo">Volvo</option>
-          </select>
+          
+          <label for="">Quantity</label>
+          <input type="text" name="quantity" class="form-control" />
 
           <label for="">Image</label>
-          <input type="file" name="Image" class="form-control" />
+          <input type="file" name="file" class="form-control" />
 
           <button type="submit" class="btn btn-success mt-4">Submit</button>
         </form>
