@@ -22,10 +22,11 @@ const Storage = multer.diskStorage({
 
 
 module.exports={
-    uploads:multer({storage:Storage}).single('file'),
-    editeduploads:multer({storage:editedStorage}).single('file2')
+    uploads:multer({storage:Storage}).array('file',4),
+    editeduploads:multer({storage:editedStorage}).array('file2',4)
 
 }
   
+
 
 

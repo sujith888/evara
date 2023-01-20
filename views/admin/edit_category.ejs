@@ -4,12 +4,15 @@
         <div class="col-md-12">
           <h2 class="text-center">Edit Category</h2>
           <form
-            action="/admin/edit_category/<%= response._id %>"
+            action="/admin/edit_category?edited=<%= response._id %>"
             method="POST"
            
           >
             <label for="">Category Name</label>
-            <input type="text" name="editCategoryname" class="form-control" value="<%=response.CategoryName %>"/>
+            <input type="text" name="editCategoryname" class="form-control" value="<%=response.categoryName %>"/>
+            <label for="">Category Name</label>
+            <input type="text" name="editCategoryname" class="form-control" value="<%=response.subcategories[0
+            ].subcategoryName %>"/>
             <button type="submit" class="btn btn-success mt-4">Submit</button>
           </form>
         </div>

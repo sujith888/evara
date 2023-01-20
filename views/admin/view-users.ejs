@@ -27,6 +27,8 @@
                   <th class="align-middle" scope="col">User Name</th>
                   <th class="align-middle" scope="col">Email</th>
                   <th class="align-middle" scope="col">Phone Number</th>
+                  <th class="align-middle" scope="col">order</th>
+
                   <th class="align-middle" scope="col">Option</th>
                 </tr>
               </thead>
@@ -37,6 +39,11 @@
                   <td><%= user.username %></td> 
                   <td><%= user.email %></td>
                   <td><%= user.phonenumber %></td>
+                
+                  
+                  <td>
+                  <a href ="/admin/order_page?userid=<%= user._id %>" class="btn btn-dark" >Orders</a>
+                  </td>
                   <td>
                       <%if(user.blocked){%>
                         

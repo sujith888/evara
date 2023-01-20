@@ -1,5 +1,4 @@
-<body>
-  <!-- Quick view -->
+
  
   <main class="main">
       
@@ -65,8 +64,7 @@
                                     
                                           <a href="/image"> 
                                               <a href ="/image/<%=response._id %> "> 
-                                              <img class="default-img" src="/uploads/<%= response.Image %>" alt="">
-                                              <!-- <img class="hover-img" src="assets/imgs/shop/product-7-1.jpg" alt=""> -->
+                                              <img class="default-img" src="/uploads/<%= response.Image[0] %>" alt="">
                                           </a> 
                                         </a>
                                 
@@ -99,11 +97,11 @@
                                       </div>
                                      
                                       <div class="product-action-1 show">
+                                    
+                                      <button type="button" aria-label="Add To Cart" class="action-btn hover-up"  onclick="addtocart('<%-response._id%>')" >  <i class="fi-rs-shopping-bag-add" ></i>  </button>  
+                                            
                                         
-                                      <a aria-label="Add To Cart" class="action-btn hover-up" href="/add-to-cart">  <i class="fi-rs-shopping-bag-add"></i>   
-                                              <a href ="/add-to-cart/<%=response._id %> " class="btn btn-primary">button</a> 
-                                        </a>         
-                                   
+                                      </a>       
                                       </div>
                                     </a>
                                   </div>
@@ -116,27 +114,23 @@
                       <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
                           <nav aria-label="Page navigation example">
                               <ul class="pagination justify-content-start">
-                                  <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                                  <li class="page-item"><a class="page-link" href="#">02</a></li>
-                                  <li class="page-item"><a class="page-link" href="#">03</a></li>
-                                  <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                                  <li class="page-item"><a class="page-link" href="#">16</a></li>
+                                <% for(let i=1;i<=pages;i++){%> 
+                                  <li class="page-item active"><a class="page-link" href="/shop?page=<%=i%>"><%=i%></a></li>
+                                  <%} %>    
                                   <li class="page-item"><a class="page-link" href="#"><i class="fi-rs-angle-double-small-right"></i></a></li>
+                                  
                               </ul>
                           </nav>
                       </div>
                   </div>
+                  
                   <div class="col-lg-3 primary-sidebar sticky-sidebar">
                       <div class="widget-category mb-30">
                           <h5 class="section-title style-1 mb-30 wow fadeIn animated">Category</h5>
                           <ul class="categories">
-                              <li><a href="shop-grid-right.html">Shoes & Bags</a></li>
-                              <li><a href="shop-grid-right.html">Blouses & Shirts</a></li>
-                              <li><a href="shop-grid-right.html">Dresses</a></li>
-                              <li><a href="shop-grid-right.html">Swimwear</a></li>
-                              <li><a href="shop-grid-right.html">Beauty</a></li>
-                              <li><a href="shop-grid-right.html">Jewelry & Watch</a></li>
-                              <li><a href="shop-grid-right.html">Accessories</a></li>
+                            <% category?.forEach(function(category) { %>
+                              <li><a href="/sub_category?sub=<%=category._id%>"><%=category.categoryName%></a></li>
+                              <%}) %> 
                           </ul>
                       </div>
           
@@ -146,8 +140,28 @@
       </section>
   </main>
   
-</body>
+
+<script>
+  
+  function addtocart(proId) {
+
+    $.ajax({
+              url: '/add-to-cart/' + proId,
+              method: 'get',
+              success: (response) => {
+                if(response.status){
+                    let count=$('#cart-count').html()
+                 count=parseInt(count)+1
+                 $("cart-count").html(count)  
+        
+                }
+                
+              }
+        
+    })
+    
+   }
+
+</script>
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-grid-left.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:26:43 GMT -->
-</html>

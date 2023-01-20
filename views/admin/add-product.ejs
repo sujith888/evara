@@ -3,11 +3,7 @@
     <div class="row w-75 mt-5">
       <div class="col-md-12">
         <h2 class="text-center">Add Product</h2>
-        <form
-          action="/admin/add_product"
-          method="POST"
-          enctype="multipart/form-data"
-        >
+        <form action="/admin/add_product" method="POST" enctype="multipart/form-data">
           <label for="">Prodcut Name</label>
           <input type="text" name="name" class="form-control" />
           <label for="">Description</label>
@@ -17,18 +13,28 @@
           <input type="text" name="price" class="form-control" />
 
           <label for="">Category</label>
+
+          <select class="form-select" name="category" id="cars" onchange="subCategory(this.value)">
+            <%response?.forEach(function(response) { %>
+                
+              <option value="<%=response.categoryName %>">
+                <%=response.categoryName %>
+              </option>
+              <% } )%>
+</select>
+          <label for="">Sub Category</label>
+          <select class="form-select" name="subcategory" id="selectbox" >
           
-          <select class="form-select" name="category" id="cars">
-            <% response.forEach(function(response) { %>
-            <option><%=response.CategoryName %></option>
-            <% } )%>
+           
+              
           </select>
-          
+
+
           <label for="">Quantity</label>
           <input type="text" name="quantity" class="form-control" />
 
           <label for="">Image</label>
-          <input type="file" name="file" class="form-control" />
+          <input type='file' name="file" class="form-control" multiple accept="file/*" />
 
           <button type="submit" class="btn btn-success mt-4">Submit</button>
         </form>
@@ -36,3 +42,31 @@
     </div>
   </div>
 </section>
+<script>
+
+function subCategory(categoryName){
+  console.log("jjjjjjj");
+  console.log(categoryName);
+  $.ajax({
+  
+ url:"/admin/find_subcategory?categoryName="+categoryName,
+ method:'GET',
+success:(sub)=>{
+  console.log(sub);
+  var data = sub;
+        var html = "";
+        for (var i = 0; i < data.length; i++) {
+            html += "<option value='" + data[i].subcategoryName + "'>" + data[i].subcategoryName + "</option>";
+        }
+        $('#selectbox').html(html);
+
+}
+})
+
+
+}
+
+
+
+
+</script>

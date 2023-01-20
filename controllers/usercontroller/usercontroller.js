@@ -1,7 +1,8 @@
 const userhelpers = require('../../helpers/UserHelpers/UserHelpers')
-const otpLogin = require('../../OTP/otpLogin')
+const otpLogin = require('../../allKeys/otpLogin')
 const client = require('twilio')(otpLogin.AccountSId, otpLogin.authtoken)
 const user = require("../../models/connection");
+const { log } = require('console');
 
 
 let loggedinstatus;
@@ -12,9 +13,21 @@ module.exports = {
 
 
   // user home
-  getHome: (req, res) => {
-    let users = req.session.user
-    res.render('user/user', { users })
+  getHome: async(req, res) => {
+ 
+    if(req.session.loggedIn){
+      let users = req.session.user
+    let  count= await userhelpers.getCartCount(req.session.user.id)
+        console.log(count);
+      res.render('user/user', { users ,count})
+    
+    }else{
+      res.render('user/user',)
+
+    }
+   
+
+   
 
   },
   // get user login
@@ -23,7 +36,7 @@ module.exports = {
     if (req.session.loggedIn) {
       res.redirect('/')
     } else {
-      res.render("user/login")
+      res.render("user/user")
     }
   },
   // post user login
@@ -52,7 +65,7 @@ module.exports = {
   getSignUp: (req, res) => {
     emailStatus = true
     if (req.session.userloggedIn) {
-      res.redirect('/')
+      res.redirect('/login')
     } else {
       res.render("user/signup", { emailStatus });
     }
@@ -77,21 +90,45 @@ module.exports = {
 
   getLogout: (req, res) => {
 
-    req.session.loggedIn = false
-    res.render('user/user')
+    req.session.loggedIn = null
+    res.render('user/login')
 
   },
 
 
   // get add-to-cart 
 
-  addToCart: (req, res) => {
-    console.log(req.params.id);
+  addToCart:async (req, res) => {
+    
+  
     userhelpers.addToCartItem(req.params.id, req.session.user.id).then((response) => {
       console.log(response);
-    })
-    res.redirect('/')
+res.json(response.status)
+
+})
+ 
   },
+
+  //list cart  page
+
+  listCart:async(req,res)=>{
+    
+    let users = req.session.user
+   let userId=req.session.user
+    let total=await userhelpers.totalCheckOutAmount(req.session.user.id)
+    let  count= await userhelpers.getCartCount(req.session.user.id)
+    subtotal=await   userhelpers.subtotal(req.session.user.id)
+    console.log(subtotal+"jjjjj");
+    
+    userhelpers.listAddToCart(req.session.user.id).then((cartItems)=>{
+   
+    
+        res.render('user/cart',{cartItems,total,array:subtotal,userId,users,count})
+    })
+      },
+    
+ 
+  
 
 
 
@@ -113,7 +150,7 @@ module.exports = {
        res.redirect('/login')
     } else {
       client.verify.v2
-        .services(otpLogin.servieceId)
+        .services(otpLogin.serviceId)
         .verifications.create({ to: `+91 ${Number}`, channel: "sms" })
         .then((verification) =>
           console.log(verification.status))
@@ -140,7 +177,7 @@ module.exports = {
     console.log(Number + '  Phone number');
     console.log(Number + '  otp');
     client.verify.v2
-      .services(otpLogin.servieceId)
+      .services(otpLogin.serviceId)
       .verificationChecks.create({ to: `+91 ${Number}`, code:OtpNumber})
       .then((verification_check) => { console.log(verification_check.status);
         console.log(verification_check);

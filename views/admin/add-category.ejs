@@ -10,6 +10,8 @@
         >
           <label for="">Category Name</label>
           <input type="text" name="categoryname" class="form-control" />
+          <label for="">SubCategory Name</label>
+          <input type="text" name="subcategoryname" class="form-control" />
           <button type="submit" class="btn btn-success mt-4">Submit</button>
         </form>
       </div>
@@ -27,6 +29,8 @@
               <tr>
                 <th class="align-middle" scope="col">NO:</th>
                 <th class="align-middle" scope="col">Category Name</th>
+                <th class="align-middle" scope="col">sub Category Name</th>
+
                 <th class="align-middle" scope="col">Option</th>
               </tr>
             </thead>
@@ -34,11 +38,14 @@
               <% viewCategory.forEach(function(viewCategory,index) { %>
               <tr>
                 <td><%= index+1 %></td>
-                <td><%= viewCategory.CategoryName %></td>
+                <td><%= viewCategory.categoryName %></td>
+    
 
+                <td><%= viewCategory.subcategories[0].subcategoryName %></td>
+            
                 <td>
-                  <a href="/admin/edit_category/<%= viewCategory._id %>" class="btn btn-xs btn-danger"> Edit</a>
-                  <a href="/admin/delete_category/<%= viewCategory._id %>" class="btn btn-xs btn-danger"> Delete</a>
+                  <a href="/admin/edit_category?edited=<%= viewCategory._id %>" class="btn btn-xs btn-danger"> Edit</a>
+                  <a href="/admin/delete_category?edited=<%= viewCategory._id %>" class="btn btn-xs btn-danger"> Delete</a>
                 </td>
               </tr>
               <% }) %>

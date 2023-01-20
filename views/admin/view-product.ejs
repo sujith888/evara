@@ -28,6 +28,7 @@
                   <th class="align-middle" scope="col">Description</th>
                   <th class="align-middle" scope="col">price</th>
                   <th class="align-middle" scope="col">Category</th>
+                  <th class="align-middle" scope="col">Sub Category</th>
                   <th class="align-middle" scope="col">Quantity</th>
                   <th class="align-middle" scope="col">Image</th>
                   <th class="align-middle" scope="col">option</th>
@@ -41,13 +42,14 @@
                   <td><%=response.ProductDescription%></td> 
                   <td><%=response.Price%></td> 
                   <td><%=response.category%></td> 
+                  <td><%=response.SubCategory%></td>
                   <td><%=response.Quantity%></td> 
                 
-                  <td><img src='/uploads/<%= response.Image %>' alt="" style="width:50px;height:50px";></td>
+                  <td><img src='/uploads/<%= response.Image[0] %>' alt="" style="width:50px;height:50px";></td>
                   <td>
-                        <a href ="/admin/edit_product/<%=response._id %>"  class="btn btn-success">Edit</a>
+                        <a href ="/admin/edit_product?edit=<%=response._id %>"  class="btn btn-success">Edit</a>
                  
-                        <a href ="/admin/delete_product/<%=response._id %>" class="btn btn-danger"   onclick="return confirm('are you want to Delete <%=response.Productname%>?')">Delete</a>
+                        <a href ="/admin/delete_product?delete=<%=response._id %>" class="btn btn-danger"   onclick="return confirm('are you want to Delete <%=response.Productname%>?')">Delete</a>
                   </td>
     
                  
