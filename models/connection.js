@@ -79,7 +79,10 @@ const categorySchema = new mongoose.Schema({
     } 
 
  })
+
+
  productSchema.index({Productname: "text"});
+ 
  
  const cartSchema=new mongoose.Schema({
   user:{
@@ -156,6 +159,45 @@ const adminSchema = new  mongoose.Schema({
 })
 
 
+const wishSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
+ wishitems : [{
+    productId:{type: mongoose.Schema.Types.ObjectId},
+  }],
+  addedAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const bannerSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true
+  },
+  image: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  link: {
+    type: String,
+    required: true
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now
+  }
+});
 module.exports={
  user :mongoose.model('user',userschema),
 category:mongoose.model('Category',categorySchema),
@@ -164,6 +206,8 @@ category:mongoose.model('Category',categorySchema),
   order:mongoose.model('order',orderSchema),
   address:mongoose.model('address',AddressSchema),
   admin:mongoose.model('admin',adminSchema ),
+  WishList : mongoose.model('WishList', wishSchema),
+  banner :mongoose.model('Banner', bannerSchema),
 }
 
 

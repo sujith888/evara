@@ -54,20 +54,18 @@
                     </div> -->
                     <div class="row product-grid-3">
                         <% response.forEach(function(response) { %>
-
                         <div class="col-lg-4 col-md-4 col-12 col-sm-6">
 
 
                             <div class="product-cart-wrap mb-30">
                                 <div class="product-img-action-wrap">
                                     <div class="product-img product-img-zoom">
-                                  
-                                        
+                                        <a href="/image"> 
                                         <a href="/sub_products?subproductname=<%=response.subcategoryName%>"> 
-                                            <img class="default-img" src="/uploads/download.jpeg" alt="">
+                                            <img class="default-img" src="/uploads/<%=response.Image[0]%>" alt="">
                                         </a>
                                     </a>
-                                 </a>
+            
                               
                                         
                                   
@@ -75,7 +73,7 @@
                                     <div class="product-action-1">
                                         <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal">
 <i class="fi-rs-search"></i></a>
-                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                        <a aria-label="Add To Wishlist" class="action-btn hover-up"onclick="addtowishlist('<%-response._id%>')" ><i class="fi-rs-heart"></i></a>
                                         <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                     </div>
                                     <div class="product-badges product-badges-position product-badges-mrg">
@@ -84,16 +82,16 @@
                                 </div>
                                 <div class="product-content-wrap">
                                     <div class="product-category">
-                                        <a href="shop-grid-right.html"></a>
+                                        <a href="shop-grid-right.html"><%=response.category%></a>
                                     </div>
-                                    <h2><a href="shop-product-right.html"> <%=response.subcategoryName%></a></h2>
+                                    <h2><a href="shop-product-right.html"> <%=response.Productname%></a></h2>
                                     <div class="rating-result" title="90%">
                                         <span>
                                             <span>95%</span>
                                         </span>
                                     </div>
                                     <div class="product-price">
-                                        <span></span>
+                                        <span><%=response.Price%></span>
                                     
                                     </div>
                                     
@@ -129,7 +127,7 @@
                         <h5 class="section-title style-1 mb-30 wow fadeIn animated">Category</h5>
                         <ul class="categories">
                           <% category?.forEach(function(category) { %>
-                            <li><a href="/sub_category?sub=<%=category._id%>"><%=category.categoryName%></a></li>
+                            <li><a href="/sub_category?sub=<%=category.categoryName%>"><%=category.categoryName%></a></li>
                             <%}) %> 
                         </ul>
                     </div>

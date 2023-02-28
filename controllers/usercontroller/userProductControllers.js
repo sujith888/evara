@@ -1,10 +1,11 @@
 
 const userproductHelpers = require('../../helpers/UserHelpers/userProduct')
 const userhelpers = require('../../helpers/UserHelpers/UserHelpers')
-const adminproductHelpers=require('../admincontroller/adminCategory')
+const adminproductHelpers = require('../admincontroller/adminCategory')
 
 const session = require('../usercontroller/usercontroller')
 const { user } = require('../../models/connection')
+const { response } = require('../../app')
 
 
 module.exports = {
@@ -16,17 +17,17 @@ module.exports = {
 
     let users = req.session.user
     console.log(req.query)
-    let pageNum=req.query.page 
-    let perPage=6
+    let pageNum = req.query.page
+    let perPage = 6
     let count = await userhelpers.getCartCount(req.session.user.id)
-   let documentCount=  await userproductHelpers.documentCount()
- 
-    let pages=Math.ceil((documentCount) /perPage)
-    userproductHelpers.shopListProduct(pageNum,perPage).then((response) => {
-      userproductHelpers.getCategory().then((Category)=>{
+    let documentCount = await userproductHelpers.documentCount()
+
+    let pages = Math.ceil((documentCount) / perPage)
+    userproductHelpers.shopListProduct(pageNum, perPage).then((response) => {
+      userproductHelpers.getCategory().then((Category) => {
         console.log(Category);
-        let category=Category
-              res.render('user/shop', { response, count, users ,pages,category})
+        let category = Category
+        res.render('user/shop', { response, count, users, pages, category })
       })
     })
 
@@ -52,63 +53,63 @@ module.exports = {
   //get checkoutpage
 
 
-  checkOutPage:async (req, res) => {
-    
+  checkOutPage: async (req, res) => {
+
     let users = req.session.user.id
-   
-      let cartItems = await userhelpers.listAddToCart(req.session.user.id)
-      let total = await userhelpers.totalCheckOutAmount(req.session.user.id)
-      userproductHelpers.checkOutpage(req.session.user.id).then((response)=>{
-      
 
-        res.render('user/checkout',{users,cartItems,total,response})
-  })
-
-},
+    let cartItems = await userhelpers.listAddToCart(req.session.user.id)
+    let total = await userhelpers.totalCheckOutAmount(req.session.user.id)
+    userproductHelpers.checkOutpage(req.session.user.id).then((response) => {
 
 
+      res.render('user/checkout', { users, cartItems, total, response })
+    })
 
-//post checkout
-
-postcheckOutPage:async (req, res) => {
-console.log('==========================================================================================');
-   console.log(req.body );
-  
- let total = await userhelpers.totalCheckOutAmount(req.session.user.id)
-let order= await userproductHelpers.placeOrder(req.body, total).then((response) => {
-          
-        
-         
-
-   if (req.body['payment-method'] == 'COD') {
-     res.json({ codstatus: true })
-
-   } else {
-     userproductHelpers.generateRazorpay(req.session.user.id, total).then((order) => {
-       console.log(order.id);
-
-       console.log(order.amount);
-       res.json(order)
-
-     })
-   }
- })
+  },
 
 
-},
+
+  //post checkout
+
+  postcheckOutPage: async (req, res) => {
+    console.log('==========================================================================================');
+    console.log(req.body);
+
+    let total = await userhelpers.totalCheckOutAmount(req.session.user.id)
+    let order = await userproductHelpers.placeOrder(req.body, total).then((response) => {
 
 
 
 
-//getaddresspage
+      if (req.body['payment-method'] == 'COD') {
+        res.json({ codstatus: true })
+
+      } else {
+        userproductHelpers.generateRazorpay(req.session.user.id, total).then((order) => {
+          console.log(order.id);
+
+          console.log(order.amount);
+          res.json(order)
+
+        })
+      }
+    })
+
+
+  },
+
+
+
+
+  //getaddresspage
 
 
 
   getAddresspage: async (req, res) => {
 
-   
+
     console.log(req.session.user.id);
-  
+
 
 
     res.render('user/add-address')
@@ -120,16 +121,16 @@ let order= await userproductHelpers.placeOrder(req.body, total).then((response) 
 
 
 
-  postAddresspage:  (req, res) => {
-         
-    
-    userproductHelpers.postAddress(req.session.user.id,req.body).then((response)=>{
+  postAddresspage: (req, res) => {
 
-    
+
+    userproductHelpers.postAddress(req.session.user.id, req.body).then((response) => {
+
+
       res.redirect('/check_out')
     })
 
-    
+
 
   },
 
@@ -137,14 +138,14 @@ let order= await userproductHelpers.placeOrder(req.body, total).then((response) 
 
 
 
-//get orderpage
+  //get orderpage
 
 
 
   getOrderPage: (req, res) => {
     userproductHelpers.orderPage(req.session.user.id).then((response) => {
 
-      res.render('user/view-orderlist',{response})
+      res.render('user/view-orderlist', { response })
     })
 
   },
@@ -155,21 +156,21 @@ let order= await userproductHelpers.placeOrder(req.body, total).then((response) 
 
   postVerifyPayment: (req, res) => {
     console.log(req.body);
-    userproductHelpers.verifyPayment(req.body).then(()=>{
+    userproductHelpers.verifyPayment(req.body).then(() => {
       console.log(req.body);
-     
-      userproductHelpers.changePaymentStatus(req.session.user.id,req.body['order[receipt]']).then(()=>{
 
-        res.json({status:true})
+      userproductHelpers.changePaymentStatus(req.session.user.id, req.body['order[receipt]']).then(() => {
 
-      }).catch((err)=>{
-   console.log(err);
-   res.json({status:false ,err})
+        res.json({ status: true })
+
+      }).catch((err) => {
+        console.log(err);
+        res.json({ status: false, err })
       })
-  
+
     })
 
-    
+
   },
 
   //postchange productquantiity
@@ -189,7 +190,7 @@ let order= await userproductHelpers.placeOrder(req.body, total).then((response) 
   },
 
 
-//get deletecart
+  //get deletecart
 
 
 
@@ -201,86 +202,128 @@ let order= await userproductHelpers.placeOrder(req.body, total).then((response) 
   },
 
 
-// cancelorder
+  // cancelorder
 
- putCancelOrder:(req,res)=>{
+  putCancelOrder: (req, res) => {
 
-     console.log(req.query.orderid);
-  userproductHelpers.cancelOrder(req.query.orderid,req.session.user.id).then((response)=>{
+    console.log(req.query.orderid);
+    userproductHelpers.cancelOrder(req.query.orderid, req.session.user.id).then((response) => {
 
-    res.json({response})
+      res.json({ response })
 
-  })
-  
-},
-  getSearch:(req,res)=>{
+    })
+
+  },
+  getSearch: (req, res) => {
 
     console.log(req.query.keyword);
-    
-    let keyword=req.query.keyword
-   
-  res.render('user/order-list')
-//      userproductHelpers.productSearch(keyword).then((response)=>{
 
-      
-        
-      
-//      }).catch((err)=>{
-// console.log(err);
-    //  })
+    let keyword = req.query.keyword
+
+    // res.render('user/order-list')
+    //      userproductHelpers.productSearch(keyword).then((response)=>{
+
+
+
+
+    //      }).catch((err)=>{
+    // console.log(err);
+    //      })
   },
-  orderDetails:async(req,res)=>{
-     
-    let details=req.query.order
-     
-     userproductHelpers.viewOrderDetails(details).then((response)=>{   
-       let products=response.products[0]
-       let address=response.address
-     let orderDetails=response.details
-      
 
 
-      res.render('user/order-list',{products,address,orderDetails})
+  //  post sort
 
-     })
-     
+  postSort: (req, res) => {
+    console.log(req.body.sort);
+    let sortOption = req.body['sort'];
+    userproductHelpers.postSort(sortOption).then((response) => {
+      res.json(response)
+    })
+  },
+
+  orderDetails: async (req, res) => {
+
+    let details = req.query.order
+
+    userproductHelpers.viewOrderDetails(details).then(async(response) => {
+    
+      let products = response.products[0]
+      let address = response.address
+      let orderDetails = response.details
+
+      let data = await userproductHelpers.createData(response)
+
+
+      res.render('user/order-list', { products, address, orderDetails })
+
+    })
+
   },
 
 
   //order sucess
 
-  
-  orderSucess:(req,res)=>{
 
-    
+  orderSucess: (req, res) => {
+
+
     res.render('user/order-sucess')
   },
-  
-  subCategory:async(req,res)=>{
+
+  subCategory: async (req, res) => {
 
     console.log(req.query.sub);
-  let category= await  userproductHelpers.getCategory()
-    userproductHelpers.subCategory(req.query.sub).then((Response)=>{
-
-         console.log(Response.subcategories[0]);
-         let response=Response.subcategories
-         res.render('user/shop-new',{response,category})
+    let category = await userproductHelpers.getCategory()
+    userproductHelpers.subCategory(req.query.sub).then((response) => {
+      console.log(response + 'shop helpers');
+      res.render('user/shop-new', { response, category })
     })
 
   },
-  
+
   // display sub products 
 
-  subProduct:async(req,res)=>{
-    let category= await  userproductHelpers.getCategory()
-   userproductHelpers.subProducts(req.query.subproductname).then((response)=>{
-                    console.log(response+'sub');
-                    
-                    let sub=[response]
-                   
-        res.render('user/sub-products',{sub,category})
-   }) 
-  }
+  subProduct: async (req, res) => {
+    let category = await userproductHelpers.getCategory()
+    userproductHelpers.subProducts(req.query.subproductname).then((response) => {
+      console.log(response + 'sub');
 
+      let sub = [response]
+
+      res.render('user/sub-products', { sub, category })
+    })
+  },
+
+
+  // wishlist
+
+  wishList: (req, res) => {
+
+
+    userproductHelpers.AddTowishList(req.query.wishid, req.session.user.id).then((response) => {
+      res.json(response.status)
+
+    })
+
+  },
+
+  ListWishList: async (req, res) => {
+    let users=req.session.user
+    let wishcount = await userproductHelpers.getWishCount(req.session.user.id)
+    userproductHelpers.ListWishList(req.session.user.id).then((wishlistItems) => {
+      console.log(wishcount);
+      res.render('user/wishlist', { wishlistItems, wishcount ,users})
+
+    })
+  },
+
+  deleteWishList: (req, res) => {
+userproductHelpers.deleteWishList(req.body).then((response)=>{
+
+  res.json(response)
+
+})
+  },
 
 }

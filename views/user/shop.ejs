@@ -52,7 +52,11 @@
                               </div>
                           </div>
                       </div> -->
-                      <div class="row product-grid-3">
+
+   
+  
+
+                      <div id="ajax-response" class="row product-grid-3">
                           <% response.forEach(function(response) { %>
 
                           <div class="col-lg-4 col-md-4 col-12 col-sm-6">
@@ -74,7 +78,7 @@
                                       <div class="product-action-1">
                                           <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal">
 <i class="fi-rs-search"></i></a>
-                                          <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                          <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addtowishlist('<%-response._id%>')" ><i class="fi-rs-heart"></i></a>
                                           <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                       </div>
                                       <div class="product-badges product-badges-position product-badges-mrg">
@@ -129,11 +133,17 @@
                           <h5 class="section-title style-1 mb-30 wow fadeIn animated">Category</h5>
                           <ul class="categories">
                             <% category?.forEach(function(category) { %>
-                              <li><a href="/sub_category?sub=<%=category._id%>"><%=category.categoryName%></a></li>
+                              <li><a href="/sub_category?sub=<%=category.categoryName%>"><%=category.categoryName%></a></li>
                               <%}) %> 
                           </ul>
+                          <div class="sort-container">
+                            <label for="sort-select">Sort by:</label>
+                            <select id="sort-select" onchange="sortProducts()">
+                              <option value="price-low-to-high">Price: Low to High</option>
+                              <option value="price-high-to-low">Price: High to Low</option>
+                            </select>
+                          </div>
                       </div>
-          
                   </div>
               </div>
           </div>
@@ -143,7 +153,8 @@
 
 <script>
   
-  function addtocart(proId) {
+ 
+   function addtocart(proId) {
 
     $.ajax({
               url: '/add-to-cart/' + proId,
@@ -161,6 +172,38 @@
     })
     
    }
+   function addtowishlist(proId) {
+  console.log(proId);
+    $.ajax({
+          url: '/add_to_wishlist?wishid=' + proId,
+          method: 'get',
+          success: (response) => {
+            let count=$('#wish-count').html()
+                 count=parseInt(count)+1
+                 $("wish-count").html(count)
+            
+          }
+    
+})
+
+}
+
+
+function sortProducts() {
+  const sortSelect = document.getElementById('sort-select').value;
+
+
+  $.ajax({
+    url: '/sort',
+    method: 'POST',
+    data: { sort: sortSelect },
+    success: (response) => {
+        console.log();
+        $('#ajax-response').html(response);
+    }
+  });
+}
+
 
 </script>
 

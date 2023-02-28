@@ -52,8 +52,10 @@ router.post('/verify_payment',auths.userauth,userProductController.postVerifyPay
 
 router.put('/cancel_order',auths.userauth,userProductController.putCancelOrder)
 
-
 router.get('/search',auths.userauth,userProductController.getSearch)
+
+router.post('/sort',auths.userauth,userProductController.postSort)
+
 
 router.get('/order_details',auths.userauth,userProductController.orderDetails)
 
@@ -62,6 +64,14 @@ router.get('/order_success',auths.userauth,userProductController.orderSucess)
 router.get('/sub_category',auths.userauth,userProductController.subCategory)
 
 router.get('/sub_products',auths.userauth,userProductController.subProduct)
+
+router.get('/add_to_wishlist',auths.userauth,userProductController.wishList)
+
+router.get('/wishlist',auths.userauth,userProductController.ListWishList)
+
+router.delete('/delete_wishlist',auths.userauth,userProductController.deleteWishList)
+
+
 
 
 

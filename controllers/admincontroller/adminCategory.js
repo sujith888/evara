@@ -33,7 +33,7 @@ getCategory:(req, res)=>{
   
   deleteCategory:(req,res)=>{
       
-    adminCategoryHelper.deleteCatogory(req.params.id).then((response)=>{
+    adminCategoryHelper.deleteCatogory(req.query.deletedid).then((response)=>{
       res.redirect('/admin/add_category')
     })
   },
@@ -42,16 +42,15 @@ getCategory:(req, res)=>{
   editCategory:(req,res)=>{
     let admins=req.session.admin
      adminCategoryHelper.editCategory(req.query.edited).then((response)=>{
-      
-      
       res.render('admin/edit_category',{layout:"adminLayout",response,admins})
      })
   },
   //postedit category
   
   postEditCategory:(req,res)=>{
-    
-     adminCategoryHelper.postEditCategory(req.query.edited,req.body.editCategoryname).then((response)=>{
+     console.log(req.query.edited);
+     console.log("=============edit category++++++++++++++");
+     adminCategoryHelper.postEditCategory(req.query.edited,req.body).then((response)=>{
   
       res.redirect('/admin/add_category')
      })

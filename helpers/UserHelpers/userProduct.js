@@ -1,5 +1,5 @@
 
-const { response } = require("../../app.js");
+const { response, set } = require("../../app.js");
 const { shopProduct } = require("../../controllers/usercontroller/userProductControllers.js");
 const user = require("../../models/connection");
 const ObjectId = require('mongodb').ObjectId
@@ -40,7 +40,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       await user.product.find().skip((pageNum - 1) * perPage).limit(perPage).then((response) => {
 
-        console.log(response+'shop');
+        console.log(response + 'shop');
 
         resolve(response)
       })
@@ -87,7 +87,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
 
       let addressInfo = {
-        fname:data.fname,
+        fname: data.fname,
         lname: data.lname,
         street: data.street,
         apartment: data.apartment,
@@ -214,7 +214,7 @@ module.exports = {
 
           }
         },
-        
+
 
         {
           $lookup: {
@@ -227,7 +227,7 @@ module.exports = {
         {
           $unwind: '$productdetails'
         },
-  
+
         {
           $project: {
             image: '$productdetails.Image',
@@ -240,24 +240,24 @@ module.exports = {
           }
         }
       ])
-    
-      console.log(productdetails+"product")
 
-      let Address= await user.address.aggregate([
-        { $match: { userid:  ObjectId(orderData.user) } },
+      console.log(productdetails + "product")
+
+      let Address = await user.address.aggregate([
+        { $match: { userid: ObjectId(orderData.user) } },
         { $unwind: "$Address" },
-        { $match: { 'Address._id':  ObjectId(orderData.address)} },
+        { $match: { 'Address._id': ObjectId(orderData.address) } },
         { $unwind: "$Address" },
         {
           $project: {
-          item:"$Address"
+            item: "$Address"
           }
         },
       ])
-    console.log(Address);
-  const items = Address.map(obj => obj.item);
-  console.log( items[0]);
- let  orderaddress=items[0]
+      console.log(Address);
+      const items = Address.map(obj => obj.item);
+      console.log(items[0]);
+      let orderaddress = items[0]
       let status = orderData['payment-method'] === 'COD' ? 'placed' : 'pending'
       let orderstatus = orderData['payment-method'] === 'COD' ? 'success' : 'pending'
       let orderdata = {
@@ -339,12 +339,12 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
 
       let orders = await user.order.findOne({ userid: userId })
-      console.log("before"+orders);
+      console.log("before" + orders);
       let order = orders.orders.slice().reverse()
-            console.log(order+"after");
-          let orderId=order[0]._id
-  
-  console.log(orderId+"+++++++++++++++++++++++++++");
+      console.log(order + "after");
+      let orderId = order[0]._id
+
+      console.log(orderId + "+++++++++++++++++++++++++++");
       total = total * 100
       console.log(total);
       var options = {
@@ -399,30 +399,30 @@ module.exports = {
 
 
   changePaymentStatus: (userId, orderId) => {
-    
+
     console.log(orderId);
     return new Promise(async (resolve, reject) => {
       try {
         let orders = await user.order.find({ userid: ObjectId(userId) });
-        
-    let    ourorders= await user.order.findOne({'orders._id':orderId},{'orders.$':1})
-   
-    
-let users = await user.order.updateOne(
-  {'orders._id': orderId}, 
-  {
-    $set: {
-      'orders.$.OrderStatus': 'success',
-      'orders.$.paymentStatus': 'paid'
-    }
-  }
-)
-          await user.cart.deleteMany({ user: userId });
-          resolve();
-        
+
+        let ourorders = await user.order.findOne({ 'orders._id': orderId }, { 'orders.$': 1 })
+
+
+        let users = await user.order.updateOne(
+          { 'orders._id': orderId },
+          {
+            $set: {
+              'orders.$.OrderStatus': 'success',
+              'orders.$.paymentStatus': 'paid'
+            }
+          }
+        )
+        await user.cart.deleteMany({ user: userId });
+        resolve();
+
       } catch (err) {
         console.log(err)
-        
+
       }
     });
   },
@@ -495,7 +495,7 @@ let users = await user.order.updateOne(
       let orders = await user.order.find({ 'orders._id': orderId })
       console.log('match---', orders);
 
-    
+
 
       let orderIndex = orders[0].orders.findIndex(orders => orders._id == orderId)
       console.log(orderIndex);
@@ -520,93 +520,312 @@ let users = await user.order.updateOne(
   },
 
   productSearch: (keyword) => {
-
     return new Promise(async (resolve, reject) => {
       try {
-        const products = await user.product.find({ $text: { $search: `"${keyword}"` } })
-        console.log(products + '-------------------------------------->');
+        const products = await user.product.findOne({ $text: { $search: keyword } });
+        console.log(products);
 
-
-        if (products.length > 0) {
+        if (products) {
           console.log(products + 'hlo');
-          resolve(products)
+          resolve(products);
         } else {
-          reject()
+          reject();
         }
-
-
-
-
       } catch (err) {
-
         console.log(err);
+        reject(err);
       }
+    });
+  },
 
 
+  // product sort
+
+  postSort: (sortOption) => {
+    return new Promise(async (resolve, reject) => {
+      let products;
+      if (sortOption === 'price-low-to-high') {
+        // Sort products by price in ascending order
+        products = await user.product.find().sort({ Price: 1 }).exec();
+      } else if (sortOption === 'price-high-to-low') {
+        // Sort products by price in descending order
+        products = await user.product.find().sort({ Price: -1 }).exec();
+      } else {
+        // Handle invalid sort option
+        products = await user.product.find().exec();
+      }
+      resolve(products)
     })
 
   },
-  
-viewOrderDetails: (orderId) => {
+
+
+  viewOrderDetails: (orderId) => {
     return new Promise(async (resolve, reject) => {
 
-      let productid = await user.order.findOne({ "orders._id": orderId },{'orders.$':1})
-   
-   let details=productid.orders[0]
-   let order=productid.orders[0].productDetails
- 
-   const productDetails = productid.orders.map(object => object.productDetails);
-   const address= productid.orders.map(object => object.shippingAddress);
-   const products = productDetails.map(object => object)
-     
-        resolve({products,address, details,})
-      
-    
-           
+      let productid = await user.order.findOne({ "orders._id": orderId }, { 'orders.$': 1 })
+
+      let details = productid.orders[0]
+      let order = productid.orders[0].productDetails
+
+      const productDetails = productid.orders.map(object => object.productDetails);
+      const address = productid.orders.map(object => object.shippingAddress);
+      const products = productDetails.map(object => object)
+
+      resolve({ products, address, details, })
+
+
+
     })
 
 
 
   },
 
-   // view category
+  // view category
 
- getCategory:()=>{
+  getCategory: () => {
 
-  return new Promise(async(resolve, reject) => {
-   await user.category.find().exec().then((Category)=>{
-    resolve(Category)
-   })
- 
-  })
-},
+    return new Promise(async (resolve, reject) => {
+      await user.category.find().exec().then((Category) => {
+        resolve(Category)
+      })
 
-subCategory:(categoryId)=>{
-  return new Promise(async(resolve, reject) => {
+    })
+  },
+
+  subCategory: (categoryname) => {
+    console.log(categoryname);
+    return new Promise(async (resolve, reject) => {
+      let product = await user.product.find({ category: categoryname }).then((response) => {
+        resolve(response)
+      })
+
+
+    })
+
+
+  },
+
+  subProducts: (subCategoryname) => {
+    console.log(subCategoryname);
+    return new Promise(async (resolve, reject) => {
+
+      await user.product.findOne({ SubCategory: subCategoryname }).then((response) => {
+        console.log(response);
+        console.log('=======sub category==============');
+        resolve(response)
+      })
+
+    })
+  },
+
+  // wish list
+
+
+  AddTowishList: (proId, userId) => {
+    let proObj = {
+      productId: proId
+    };
+
+    return new Promise(async (resolve, reject) => {
+      let wishlist = await user.WishList.findOne({ user: userId });
+      if (wishlist) {
+        let productExist = wishlist.wishitems.findIndex(
+          (item) => item.productId == proId
+        );
+        if (productExist == -1) {
+          user.WishList.updateOne({ user: userId },
+            {
+              $addToSet: {
+                wishitems: proObj
+              },
+            }
+          )
+            .then(() => {
+              resolve({ status: true });
+            });
+        }
+
+      } else {
+        const newWishlist = new user.WishList({
+          user: userId,
+          wishitems: proObj
+        });
+
+        await newWishlist.save().then(() => {
+          resolve({ status: true });
+        });
+      }
+    });
+  },
+
+  // add to wish list
+  ListWishList: (userId) => {
+    return new Promise(async (resolve, reject) => {
+
+
+      await user.WishList.aggregate([
+        {
+          $match: {
+            user: ObjectId(userId)
+          }
+        },
+        {
+          $unwind: '$wishitems'
+        },
+
+
+        {
+          $project: {
+            item: '$wishitems.productId',
+          }
+        },
+
+
+        {
+          $lookup: {
+            from: 'products',
+            localField: "item",
+            foreignField: "_id",
+            as: 'wishlist'
+          }
+        },
+        {
+          $project: {
+            item: 1, wishlist: { $arrayElemAt: ['$wishlist', 0] }
+          }
+        },
+      ]).then((wishlist) => {
+        console.log(wishlist);
+        resolve(wishlist)
+      })
+    })
+  },
+
+  getWishCount: (userId) => {
+    console.log('api called');
+    return new Promise(async (resolve, reject) => {
+      let count = 0;
+      let wishlist = await user.WishList.findOne({ user: userId })
+      if (wishlist) {
+        count = wishlist.wishitems.length
+      }
+      resolve(count)
+
+    })
+  },
+
+  // delete wish list 
+
+  deleteWishList: (body) => {
+
+    return new Promise(async (resolve, reject) => {
+
+      let product = await user.WishList.updateOne({ _id:body.wishlistId },
+        {
+          "$pull":
+
+            { wishitems: { productId: body.productId} }
+        }).then(() => {
+          resolve({ removeProduct: true })
+        })
+
+      
+    })
+  },
+
+  // user invoice
+
+  
+  createData:(details)=>
+  {
+    console.log('------------------------------------------');
+    let address = details.address[0]
+    let product = details.products[0][0]
+    let orderDetails = details.details
+    console.log('address',address);
+    console.log('product',product);
+    console.log('orderdetails',orderDetails);
+
+    var data = {
+      // Customize enables you to provide your own templates
+      // Please review the documentation for instructions and examples
+      customize: {
+        //  "template": fs.readFileSync('template.html', 'base64') // Must be base64 encoded html
+      },
+      images: {
+        // The logo on top of your invoice
+        logo: "https://freelogocreator.com/user_design/logos/2023/02/28/120325-medium.png",
+        // The invoice background
+        // background: "https://public.easyinvoice.cloud/img/watermark-draft.jpg",
+      },
+      // Your own data
+      sender: {
+        company: "A 2 Z Ecommerce",
+        address: "Washington DC",
+        zip: "4567 CD",
+        city: "Los santos",
+        country: "America",
+       
+      },
+      // Your recipient
+      client: {
     
-   await user.category.findOne({_id:categoryId}).then((response)=>{
-    console.log(response+'shop helpers');
-  resolve(response)
-   }) 
-  
-  })
-},
+        company: address.fname,
+        address: address.street,
+        zip: address.pincode,
+        city: address.city,
+        country: "India",
+      },
 
-subProducts:(subCategoryname)=>{
-  console.log(subCategoryname);
-  return new Promise(async(resolve, reject) => {
- 
-   await user.product.findOne({SubCategory:subCategoryname}).then((response)=>{
-         
-   resolve(response)
-  })
-  
-  })
+      information: {
+        number: address.mobile,
+        date: "12-12-2021",
+        "due-date": "31-12-2021",
+      },
 
+      products: [
+        {
+          quantity: product.quantity,
+          description: product.productsName,
+          "tax-rate": 6,
+          price: product.productsPrice,
+        },
+      ],
+      // The message you would like to display on the bottom of your invoice
+      "bottom-notice": "Thank you for your order from A 2  Z Ecommerce",
+      // Settings to customize your invoice
+      settings: {
+        currency: "INR", // See documentation 'Locales and Currency' for more info. Leave empty for no currency.
+        // "locale": "nl-NL", // Defaults to en-US, used for number formatting (See documentation 'Locales and Currency')
+        // "tax-notation": "gst", // Defaults to 'vat'
+        // "margin-top": 25, // Defaults to '25'
+        // "margin-right": 25, // Defaults to '25'
+        // "margin-left": 25, // Defaults to '25'
+        // "margin-bottom": 25, // Defaults to '25'
+        // "format": "A4", // Defaults to A4, options: A3, A4, A5, Legal, Letter, Tabloid
+        // "height": "1000px", // allowed units: mm, cm, in, px
+        // "width": "500px", // allowed units: mm, cm, in, px
+        // "orientation": "landscape", // portrait or landscape, defaults to portrait
+      },
+      // Translate your invoice to your preferred language
+      translate: {
+        // "invoice": "FACTUUR",  // Default to 'INVOICE'
+        // "number": "Nummer", // Defaults to 'Number'
+        // "date": "Datum", // Default to 'Date'
+        // "due-date": "Verloopdatum", // Defaults to 'Due Date'
+        // "subtotal": "Subtotaal", // Defaults to 'Subtotal'
+        // "products": "Producten", // Defaults to 'Products'
+        // "quantity": "Aantal", // Default to 'Quantity'
+        // "price": "Prijs", // Defaults to 'Price'
+        // "product-total": "Totaal", // Defaults to 'Total'
+        // "total": "Totaal" // Defaults to 'Total'
+      },
+    };
 
-
-},
-
+    return data;
+  }
 }
 
 

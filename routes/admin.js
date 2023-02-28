@@ -11,7 +11,6 @@ const multer= require('multer');
 const { doLogin } = require("../helpers/UserHelpers/UserHelpers");
 const upload=require('../multer/multer')
 const auths=require('../middlewares/middleware')
-
 const check=require('../middlewares/admin-middleware');
 const adminLogin = require("../controllers/admincontroller/adminLogin");
 
@@ -27,7 +26,7 @@ router.get("/login",check.auth,adminController.getAdminLogin);
 
 router.post("/login",adminController.postAdminLogin)
 
-router.get("/logout",check.auth,adminController.getAdminLogOut)
+router.get("/logout",check.auth,auths.auth,adminController.getAdminLogOut)
  
 router.get("/view_users",check.auth,adminusercontroller.getViewUser)
 
@@ -39,7 +38,7 @@ router.get("/add_category",check.auth,admincategorycontroller.getCategory)
 
 router.post("/add_category",check.auth,admincategorycontroller.postCategory)
 
-router.get("/delete_category/:id",check.auth,admincategorycontroller.deleteCategory)
+router.get("/delete_category",check.auth,admincategorycontroller.deleteCategory)
 
 router.get("/edit_category",check.auth,admincategorycontroller.editCategory)
 
@@ -61,7 +60,6 @@ router.get("/orders_list", check.auth, adminproductcontroller.getOrderList)
 
 router.get("/order_details", check.auth, adminproductcontroller.getOrderDetails)
 
-
 router.post("/order_details", check.auth, adminproductcontroller. postOrderDetails)
 
 router.get("/find_subcategory", check.auth, adminproductcontroller. findSubcategory)
@@ -75,6 +73,21 @@ router.put("/unblock_admin", check.auth, adminController.unBlockAdmin)
 router.get("/order_page", check.auth, adminproductcontroller. orderPage)
 
 router.get("/adminorder_details", check.auth, adminproductcontroller.adminOrderDetails)
+
+router.get("/add_banner",check.auth, adminproductcontroller.getAddBanner)
+
+router.post("/add_banner",upload.addBannerupload,check.auth, adminproductcontroller.postAddBanner)
+
+router.get("/list_banner",check.auth, adminproductcontroller.listBanner)
+
+router.get("/edit_banner",check.auth, adminproductcontroller.getEditBanner)
+
+router.post("/edit_banner",upload.editBannerupload,check.auth, adminproductcontroller.postEditBanner)
+
+
+
+
+
 
 
 

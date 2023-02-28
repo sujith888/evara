@@ -21,11 +21,7 @@
             <% } )%>
           </select>
           <label for="cars">Sub Category</label>
-         
           <select class="form-select" name="subcategory" id="selectbox" >
-           
-          
-       
           </select>
         
           <label for="">Quantity</label>
@@ -33,8 +29,15 @@
 
           <label for="">Image</label>
           <img src="/uploads/<%=editproduct?.Image[0]%>" alt="" style="width:100px;height:auto ">
+          <img src="/uploads/<%=editproduct?.Image[1]%>" alt="" style="width:100px;height:auto ">
+          <img src="/uploads/<%=editproduct?.Image[2]%>" alt="" style="width:100px;height:auto ">
+          <img src="/uploads/<%=editproduct?.Image[3]%>" alt="" style="width:100px;height:auto ">
+        
           
-          <input type="file" name="file2" class="form-control" />
+          <input type="file" name="image1" class="form-control" >
+          <input type="file" name="image2" class="form-control" >
+          <input type="file" name="image3" class="form-control" >
+          <input type="file" name="image4" class="form-control" >
 
           <button type="submit" class="btn btn-success mt-4">Submit</button>
         </form>
@@ -56,7 +59,7 @@
     var data = sub;
           var html = "";
           for (var i = 0; i < data.length; i++) {
-              html += "<option value='" + data[i].subcategoryName + "'>" + data[i].subcategoryName + "</option>";
+              html += "<option value=" + data[i].subcategoryName + ">" + data[i].subcategoryName + "</option>";
           }
           $('#selectbox').html(html);
   

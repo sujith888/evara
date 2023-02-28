@@ -42,9 +42,9 @@
                                   
 
                                             <div class="detail-qty border radius  m-auto">
-                                               <div><button class="cart-item-count mr-5" onclick="changeQuantity('<%= cartItems._id%>','<%= cartItems.item %>','<%= userId.id %>',-1)">-</button></div>
+                                               <div><button class="cart-item-count " onclick="changeQuantity('<%= cartItems._id%>','<%= cartItems.item %>','<%= userId.id %>',-1)">-</button></div>
                                                 <span id="<%= cartItems.item %>"><%= cartItems.quantity%></span>
-                                                <div>  <button class="cart-item-count ml-5" onclick="changeQuantity('<%= cartItems._id%>','<%= cartItems.item %>','<%= userId.id %>',1)">+</button></div> 
+                                                <div>  <button class="cart-item-count " onclick="changeQuantity('<%= cartItems._id%>','<%= cartItems.item %>','<%= userId.id %>',1)">+</button></div> 
                                             </div>
                                         </td>
                                         <td class="text-right" cartItemss-title="total">

@@ -84,17 +84,12 @@ module.exports = {
     },
     //post edit ctaegory
 
-    postEditCategory: (editedId, editedName) => {
-        console.log(editedId);
-        console.log(editedName);
+    postEditCategory: (editedId, editedData) => {
         return new Promise(async (resolve, reject) => {
-            await user.category.updateOne({ _id: editedId }, { $set: { CategoryName: editedName } }).then((response) => {
-                resolve(response)
+            await user.category.updateOne({ _id: editedId }, { $set: { categoryName: editedData.editCategoryname ,subcategoryName:editedData.editsubCategoryname} }).then((response) => {
                 console.log(response);
+                console.log("================mAINRESPONSE++++++++++");
             })
-
-
-
         })
     },
 }

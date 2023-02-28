@@ -102,8 +102,7 @@ module.exports = {
     
   
     userhelpers.addToCartItem(req.params.id, req.session.user.id).then((response) => {
-      console.log(response);
-res.json(response.status)
+      res.json(response.status)
 
 })
  
@@ -118,11 +117,7 @@ res.json(response.status)
     let total=await userhelpers.totalCheckOutAmount(req.session.user.id)
     let  count= await userhelpers.getCartCount(req.session.user.id)
     subtotal=await   userhelpers.subtotal(req.session.user.id)
-    console.log(subtotal+"jjjjj");
-    
     userhelpers.listAddToCart(req.session.user.id).then((cartItems)=>{
-   
-    
         res.render('user/cart',{cartItems,total,array:subtotal,userId,users,count})
     })
       },

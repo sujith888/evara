@@ -1,10 +1,11 @@
 const { response } = require('../../app');
 const adminHelper= require('../../helpers/adminHelpers/adminProductHelpers');
 const adminUserhelper = require('../../helpers/adminHelpers/adminUserhelpers');
-const { category } = require('../../models/connection');
+const { category, product } = require('../../models/connection');
 const user = require("../../models/connection");
 const adminLoginHelper=require('../../helpers/adminHelpers/adminLoginhelpers');
 const adminLoginhelpers = require('../../helpers/adminHelpers/adminLoginhelpers');
+
 
 
 
@@ -41,13 +42,11 @@ module.exports={
       //   else{
       //     adminloginErr=true
           adminLoginhelpers.postlogin(req.body).then((response)=>{
-            console.log(response);
             req.session.adminloggedIn=true
             req.session.admin=response
          let status=   response.loggedinstatus
          
           if(status==true){
-            console.log('hlo');
             res.redirect('/admin')
           }else{
       res.render('admin/login',{layout:'adminLayout'})
@@ -61,24 +60,89 @@ module.exports={
        
 //get dashboard
 
-  getDashboard: (req, res) =>{
+  getDashboard:async (req, res) =>{
     
-   let adminstatus=req.session.adminloggedIn
-   if(adminstatus){
+   if(req.session.adminloggedIn){
   let admins=req.session.admin
-    console.log(req.session.admin);
-    
-    res.render("admin/admin-dashboard",{ layout: "adminLayout" ,admins});
+
+  let totalProducts, days=[]
+  let ordersPerDay = {};
+ let paymentCount=[];
+
+ let  Products= await adminHelper.getViewProduct()
+  
+    totalProducts = Products.length
+ 
+   let orderByCod=  await adminHelper.getCodCount()
+ 
+   let codCount=orderByCod.length
+
+   let orderByOnline= await adminHelper.getOnlineCount()
+   let totalUser= await adminHelper.totalUserCount()
+
+   let totalUserCount=totalUser.length
+
+   let onlineCount=orderByOnline.length;
+
+  
+   paymentCount.push(onlineCount)
+   paymentCount.push(codCount)
+
+ await adminHelper.getOrderByDate().then((response)=>
+  {
+    let result = response[0]?.orders
+    for (let i = 0; i < result.length; i++) {
+      let ans={}
+
+      ans['createdAt']=result[i].createdAt
+      days.push(ans)
+      
+      ans={}
+   
+     
+      
     }
+   
+
+
+days.forEach((order) => {
+  const day = order.createdAt.toLocaleDateString('en-US', { weekday: 'long' });
+  ordersPerDay[day] = (ordersPerDay[day] || 0) + 1;
+
+
+});
+
+  })
+
+
+  await adminHelper.getAllOrders().then((response)=>
+  {
+
+    var length = response.length
+    
+    let total = 0;
+    
+    for (let i = 0; i < length; i++) {
+      total += response[i].orders.totalPrice;
+    }
+  
+
+    res.render("admin/admin-dashboard",{ layout: "adminLayout" ,admins, length, total, totalProducts,ordersPerDay,paymentCount,totalUserCount});
+
+  }) 
+  
+   }
 
   },
 
 //admin logout
 
 getAdminLogOut:(req,res)=>{
+  if(req.session.adminloggedIn){
   req.session.adminloggedIn=false
 
   res.render("admin/login",{layout: "adminLayout"})
+  }
 },
 
 // get sign in 
@@ -94,7 +158,6 @@ getsignin:(req,res)=>{
 
 
 postsignin:(req,res)=>{
-     console.log(req.body);
   adminLoginHelper.postsignin(req.body).then((response)=>{
 
   console.log(response);
@@ -109,7 +172,6 @@ postsignin:(req,res)=>{
    adminLoginHelper.viewAdmins().then((response)=>{
 
        let admins=response
-       console.log(admins);
        res.render('admin/view-admins',{layout: "adminLayout",admins})
 
    })
@@ -118,9 +180,7 @@ postsignin:(req,res)=>{
  ,
 
  blockAdmin:(req,res)=>{
-  console.log(req.query.adminid);
   adminLoginHelper.blockAdmin(req.query.adminId).then((response)=>{
-    console.log(response.blocked+"=================================");
     res.json(response)
 
   })

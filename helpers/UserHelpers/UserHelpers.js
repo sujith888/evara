@@ -119,22 +119,11 @@ module.exports = {
               "$push":
               {
                 "cartItems": proObj
-
-
-
-
-
-
               }
             }).then((response) => {
-
-
-
               resolve({ response, status: true })
 
             })
-
-
         }
       } else {
         let cartItems = new user.cart({
@@ -146,7 +135,6 @@ module.exports = {
         })
         console.log(cartItems + "proid");
         await cartItems.save().then(() => {
-
           resolve({ status: true })
 
 
@@ -156,22 +144,12 @@ module.exports = {
 
       }
     })
-
-
-
-
-
-
-
-
   },
 
 
   // list cart 
 
   listAddToCart: (userId) => {
-
-    console.log(userId);
     return new Promise(async (resolve, reject) => {
 
 
@@ -242,6 +220,7 @@ module.exports = {
 
     })
   },
+
 
 
 
