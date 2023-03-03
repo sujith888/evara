@@ -19,7 +19,7 @@ getViewUser: (req, res)=>{
   
   getBlockUser: (req, res)=> {
    
- adminUserHelper.blockUser(req.params.id).then((response)=>{
+ adminUserHelper.blockUser(req.query.userid).then((response)=>{
   
       res.redirect('/admin/view_users')
     })
@@ -28,7 +28,7 @@ getViewUser: (req, res)=>{
   
   getUnBlockUser: (req, res)=>{
   
- adminUserHelper.UnblockUser(req.params.id).then((response)=>{
+ adminUserHelper.UnblockUser(req.query.userid).then((response)=>{
   
       res.redirect('/admin/view_users')
     })

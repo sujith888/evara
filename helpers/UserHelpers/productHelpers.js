@@ -27,8 +27,18 @@ var instance = new Razorpay({
 
 module.exports = {
 
+   // for best seller 
+
+   bestSeller:()=>{
+
+    return new Promise(async(resolve, reject) => {
+     await user.product.find().limit(4).then((response)=>{
   
- 
+      resolve(response)
+  
+       })
+    })
+    },
 
   // shop page  document count 
 
@@ -36,7 +46,7 @@ module.exports = {
     console.log();
     return new Promise(async (resolve, reject) => {
       await user.product.find().countDocuments().then((documents) => {
-        console.log(documents);
+        resolve(documents)
       })
     })
   },
@@ -336,41 +346,58 @@ module.exports = {
   // generate Razorpay
 
 
-
   generateRazorpay: (userId, total) => {
-
     return new Promise(async (resolve, reject) => {
+        try {
+            let orders = await user.order.findOne({ userid: userId });
+            console.log("before" + orders);
+            let order = orders.orders.slice().reverse();
+            console.log(order + "after");
+            let orderId = order[0]._id;
 
-      let orders = await user.order.findOne({ userid: userId })
-      console.log("before" + orders);
-      let order = orders.orders.slice().reverse()
-      console.log(order + "after");
-      let orderId = order[0]._id
-
-      console.log(orderId + "+++++++++++++++++++++++++++");
-      total = total * 100
-      console.log(total);
-      var options = {
-        amount: parseInt(total),
-        currency: "INR",
-        receipt: "" + orderId,
-      }
-      instance.orders.create(options, function (err, order) {
-        if (err) {
-          console.log(err);
-        } else {
-          // console.log('new order:',order);
-
-
-          resolve(order)
-          //  console.log(order);
+            console.log(orderId + "+++++++++++++++++++++++++++");
+            total = total * 100;
+            console.log(total);
+            var options = {
+                amount: parseInt(total),
+                currency: "INR",
+                receipt: "" + orderId,
+            };
+            instance.orders.create(options, async (err, order) => {
+                if (err) {
+                    
+                    reject(err); 
+                } else {
+                  console.log(order);
+                    resolve(order);
+                }
+            }).catch((error) => {
+                console.log(error);
+                reject(false); 
+            });
+        } catch (error) {
+            console.log(error);
+            reject(error);
         }
-      })
+    });
+},
 
-    })
+  
+
+  deleteOrder: (userId) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const updatedUser = await user.order.updateMany({userid: userId },
+          { $pull: { orders: { paymentStatus: 'pending' } } }
+        );
+        console.log(updatedUser);
+        resolve(updatedUser);
+      } catch (error) {
+        reject(error);
+      }
+    });
   },
-
-
+  
 
   // verify payment 
 
@@ -380,6 +407,8 @@ module.exports = {
     return new Promise((resolve, reject) => {
       try {
         console.log('hlo');
+  console.log('payment2');
+
         const crypto = require('crypto')
         let hmac = crypto.createHmac('sha256', razorpay.secret_id)
         hmac.update(details['payment[razorpay_order_id]'] + "|" + details['payment[razorpay_payment_id]'])
@@ -402,6 +431,7 @@ module.exports = {
 
 
   changePaymentStatus: (userId, orderId) => {
+    console.log('payment3');
 
     console.log(orderId);
     return new Promise(async (resolve, reject) => {
@@ -411,18 +441,19 @@ module.exports = {
         let ourorders = await user.order.findOne({ 'orders._id': orderId }, { 'orders.$': 1 })
 
 
-        let users = await user.order.updateOne(
-          { 'orders._id': orderId },
+        let users = await user.order.updateOne(   { 'orders._id': orderId },
           {
             $set: {
               'orders.$.OrderStatus': 'success',
               'orders.$.paymentStatus': 'paid'
             }
           }
+      
         )
+        console.log(users);
         await user.cart.deleteMany({ user: userId });
         resolve();
-
+       
       } catch (err) {
         console.log(err)
 
@@ -430,8 +461,7 @@ module.exports = {
     });
   },
 
-
-
+  
   // change product quantity
 
 
@@ -543,17 +573,18 @@ module.exports = {
     });
   },
 
-  productSearch: (keyword) => {
+  productSearch: (searchData) => {
+    let keyword=searchData.search
+    console.log(keyword);
     return new Promise(async (resolve, reject) => {
       try {
-        const products = await user.product.findOne({ $text: { $search: keyword } });
-        console.log(products);
+        const products = await user.product.find( { Productname: { $regex:new RegExp(keyword,'i')}});
 
-        if (products) {
-          console.log(products + 'hlo');
+        if (products.length > 0) {
+        console.log(products);
           resolve(products);
         } else {
-          reject();
+          reject('No products found.');
         }
       } catch (err) {
         console.log(err);

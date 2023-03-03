@@ -1,14 +1,15 @@
 
-const userproductHelpers = require('../../helpers/UserHelpers/userProduct')
+const userproductHelpers =require('../../helpers/UserHelpers/productHelpers')
 const userhelpers = require('../../helpers/UserHelpers/UserHelpers')
 const adminproductHelpers = require('../admincontroller/adminCategory')
-
 const session = require('../usercontroller/usercontroller')
-const { user } = require('../../models/connection')
+const user = require('../../models/connection')
 const { response } = require('../../app')
+const userProduct = require('../../helpers/UserHelpers/userProduct')
 
-
+let wishCount,count, users ;
 module.exports = {
+
 
 
   //shop
@@ -19,32 +20,34 @@ module.exports = {
     console.log(req.query)
     let pageNum = req.query.page
     let perPage = 6
-    let count = await userhelpers.getCartCount(req.session.user.id)
-    let documentCount = await userproductHelpers.documentCount()
+ 
+    documentCount = await userproductHelpers.productCount()
 
+    count = await userhelpers.getCartCount(req.session.user.id)
+     let wishCount=await userproductHelpers.getWishCount()
+     
     let pages = Math.ceil((documentCount) / perPage)
     userproductHelpers.shopListProduct(pageNum, perPage).then((response) => {
       userproductHelpers.getCategory().then((Category) => {
-        console.log(Category);
         let category = Category
-        res.render('user/shop', { response, count, users, pages, category })
+        console.log(pages);
+        res.render('user/shop', { response, count, users, pages, category ,wishCount})
       })
     })
 
   },
-
 
   //image zoom
 
 
 
   imageZoom: (req, res) => {
+    console.log(count );
 
     userproductHelpers.imageZoom(req.params.id).then((response) => {
-      image = response
-      console.log(image);
-
-      res.render('user/imagezoom', { image })
+    let   image = response
+    console.log(image);
+      res.render('user/productimagezoom', { image,wishCount,count ,users})
     })
   },
 
@@ -55,14 +58,13 @@ module.exports = {
 
   checkOutPage: async (req, res) => {
 
-    let users = req.session.user.id
-
+  let users=req.session.user.id
     let cartItems = await userhelpers.listAddToCart(req.session.user.id)
     let total = await userhelpers.totalCheckOutAmount(req.session.user.id)
     userproductHelpers.checkOutpage(req.session.user.id).then((response) => {
 
 
-      res.render('user/checkout', { users, cartItems, total, response })
+      res.render('user/checkout', { users, cartItems, total, response,wishCount,count })
     })
 
   },
@@ -85,21 +87,20 @@ module.exports = {
         res.json({ codstatus: true })
 
       } else {
-        userproductHelpers.generateRazorpay(req.session.user.id, total).then((order) => {
-          console.log(order.id);
-
-          console.log(order.amount);
-          res.json(order)
-
-        })
+        try {
+          userproductHelpers.generateRazorpay(req.session.user.id, total).then((order) => {
+            console.log(order);
+            res.json(order);
+          });
+        } catch (error) {
+          console.log(error);
+          res.status(500).send(error);
+        }
       }
     })
-
-
   },
-
-
-
+  
+      
 
   //getaddresspage
 
@@ -107,14 +108,11 @@ module.exports = {
 
   getAddresspage: async (req, res) => {
 
-
     console.log(req.session.user.id);
-
-
-
-    res.render('user/add-address')
+    res.render('user/add-address',{users,wishCount,count})
 
   },
+
 
 
   //post addresspage
@@ -142,10 +140,21 @@ module.exports = {
 
 
 
-  getOrderPage: (req, res) => {
+  getOrderPage: async(req, res) => {
+    let users=req.session.user
+    let wishCount=await userproductHelpers.getWishCount()
+  let count = await userhelpers.getCartCount()
     userproductHelpers.orderPage(req.session.user.id).then((response) => {
+      const getDate = (date) => {
+        let orderDate = new Date(date);
+        let day = orderDate.getDate();
+        let month = orderDate.getMonth() + 1;
+        let year = orderDate.getFullYear();
+        return `${isNaN(day) ? "00" : day}-${isNaN(month) ? "00" : month}-${isNaN(year) ? "0000" : year
+          }`;
+      };
 
-      res.render('user/view-orderlist', { response })
+      res.render('user/view-orderlist', { response ,getDate,users,wishCount,count})
     })
 
   },
@@ -160,11 +169,10 @@ module.exports = {
       console.log(req.body);
 
       userproductHelpers.changePaymentStatus(req.session.user.id, req.body['order[receipt]']).then(() => {
-
         res.json({ status: true })
+console.log("hiiii");
 
       }).catch((err) => {
-        console.log(err);
         res.json({ status: false, err })
       })
 
@@ -214,31 +222,54 @@ module.exports = {
     })
 
   },
-  getSearch: (req, res) => {
 
-    console.log(req.query.keyword);
-
-    let keyword = req.query.keyword
-
-    // res.render('user/order-list')
-    //      userproductHelpers.productSearch(keyword).then((response)=>{
+  // RETURN ORDER
 
 
+  putReturnOrder: (req, res) => {
+   console.log(req.query.orderid+"++++++++++++++");
+    userproductHelpers.returnOrder(req.query.orderid,req.session.user.id).then((response) => {
+        res.json(response);
+      });
+  },
+  getSearch: async(req, res) => {
+
+    let category=await  userproductHelpers.getCategory()
+    // console.log(req.query.page);
+    // let pageNum = req.query.page
+    // let perPage = 6
+ 
+    // documentCount = await userproductHelpers.productCount()
 
 
-    //      }).catch((err)=>{
-    // console.log(err);
-    //      })
+    // let pages = Math.ceil((documentCount) / perPage)
+
+    userproductHelpers.productSearch(req.body).then((response)=>{
+          res.render('user/shop-new',{response,category})
+          console.log(response);
+         }).catch((err)=>{
+    console.log(err);
+    res.render('user/shop-new',{err,category})
+
+         })
   },
 
 
   //  post sort
 
-  postSort: (req, res) => {
-    console.log(req.body.sort);
-    let sortOption = req.body['sort'];
+  postSort:async (req, res) => {
+  let users=req.session.user
+  let wishCount= await userproductHelpers.getWishCount()
+  console.log(wishCount);
+
+  let count= await userhelpers.getCartCount()
+  console.log(count);
+
+    console.log(req.body);
+    let sortOption = req.body['selectedValue'];
+   let category=await  userproductHelpers.getCategory()
     userproductHelpers.postSort(sortOption).then((response) => {
-      res.json(response)
+    res.render('user/shop-new',{response,category,users,wishCount,count})
     })
   },
 
@@ -246,16 +277,25 @@ module.exports = {
 
     let details = req.query.order
 
-    userproductHelpers.viewOrderDetails(details).then(async(response) => {
-    
+    const getDate = (date) => {
+      let orderDate = new Date(date);
+      let day = orderDate.getDate();
+      let month = orderDate.getMonth() + 1;
+      let year = orderDate.getFullYear();
+      return `${isNaN(day) ? "00" : day}-${isNaN(month) ? "00" : month}-${isNaN(year) ? "0000" : year
+        }`;
+    };
+
+    userproductHelpers.viewOrderDetails(details).then( (response) => {
+
       let products = response.products[0]
       let address = response.address
       let orderDetails = response.details
 
-      let data = await userproductHelpers.createData(response)
+      let data =  userproductHelpers.createData(response,getDate)
 
 
-      res.render('user/order-list', { products, address, orderDetails })
+      res.render('user/order-list', { products, address, orderDetails,data,getDate,users,wishCount,count})
 
     })
 
@@ -268,7 +308,7 @@ module.exports = {
   orderSucess: (req, res) => {
 
 
-    res.render('user/order-sucess')
+    res.render('user/order-sucess',{users,wishCount,count})
   },
 
   subCategory: async (req, res) => {
@@ -277,7 +317,7 @@ module.exports = {
     let category = await userproductHelpers.getCategory()
     userproductHelpers.subCategory(req.query.sub).then((response) => {
       console.log(response + 'shop helpers');
-      res.render('user/shop-new', { response, category })
+      res.render('user/shop-new', { response, category ,users,count,wishCount})
     })
 
   },
@@ -291,7 +331,7 @@ module.exports = {
 
       let sub = [response]
 
-      res.render('user/sub-products', { sub, category })
+      res.render('user/sub-products', { sub, category,users,wishCount,count })
     })
   },
 
@@ -309,21 +349,21 @@ module.exports = {
   },
 
   ListWishList: async (req, res) => {
-    let users=req.session.user
-    let wishcount = await userproductHelpers.getWishCount(req.session.user.id)
+    let users = req.session.user
+     wishCount = await userproductHelpers.getWishCount(req.session.user.id)
     userproductHelpers.ListWishList(req.session.user.id).then((wishlistItems) => {
-      console.log(wishcount);
-      res.render('user/wishlist', { wishlistItems, wishcount ,users})
+      console.log(wishCount);
+      res.render('user/wishlist', { wishlistItems, wishCount, users,count })
 
     })
   },
 
   deleteWishList: (req, res) => {
-userproductHelpers.deleteWishList(req.body).then((response)=>{
+    userproductHelpers.deleteWishList(req.body).then((response) => {
 
-  res.json(response)
+      res.json(response)
 
-})
+    })
   },
 
 }

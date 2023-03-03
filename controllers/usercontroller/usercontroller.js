@@ -3,11 +3,13 @@ const otpLogin = require('../../allKeys/otpLogin')
 const client = require('twilio')(otpLogin.AccountSId, otpLogin.authtoken)
 const user = require("../../models/connection");
 const { log } = require('console');
+const userProduct = require('../../helpers/UserHelpers/userProduct');
+const { cart } = require('../../models/connection');
+const productHelpers = require('../../helpers/UserHelpers/productHelpers');
 
 
 let loggedinstatus;
-let Number;
-
+let Number, wishCount, count,users;
 
 module.exports = {
 
@@ -15,15 +17,15 @@ module.exports = {
   // user home
   getHome: async(req, res) => {
  
+  
     if(req.session.loggedIn){
-      let users = req.session.user
-    let  count= await userhelpers.getCartCount(req.session.user.id)
-        console.log(count);
-      res.render('user/user', { users ,count})
+      users = req.session.user
+      let response=await productHelpers.bestSeller() 
     
-    }else{
-      res.render('user/user',)
-
+      wishCount= await userProduct.getWishCount(req.session.user.id)
+    let  count= await userhelpers.getCartCount(req.session.user.id)
+      res.render('user/user', { users ,count,wishCount,response})
+    
     }
    
 
@@ -36,7 +38,7 @@ module.exports = {
     if (req.session.loggedIn) {
       res.redirect('/')
     } else {
-      res.render("user/user")
+      res.render("user/user-Dashboard")
     }
   },
   // post user login
@@ -112,13 +114,12 @@ module.exports = {
 
   listCart:async(req,res)=>{
     
-    let users = req.session.user
+    users = req.session.user
    let userId=req.session.user
     let total=await userhelpers.totalCheckOutAmount(req.session.user.id)
-    let  count= await userhelpers.getCartCount(req.session.user.id)
-    subtotal=await   userhelpers.subtotal(req.session.user.id)
+      count= await userhelpers.getCartCount(req.session.user.id)
     userhelpers.listAddToCart(req.session.user.id).then((cartItems)=>{
-        res.render('user/cart',{cartItems,total,array:subtotal,userId,users,count})
+        res.render('user/cart',{cartItems,total,userId,users,count,wishCount})
     })
       },
     
@@ -139,7 +140,7 @@ module.exports = {
   postOtp: async(req, res) => {
     console.log(req.body.phonenumber);
     Number = req.body.phonenumber;
-    let users =  await user.user.find({ phonenumber: Number }).exec()
+    users =  await user.user.find({ phonenumber: Number }).exec()
     console.log(users);
     if (users == false) {
        res.redirect('/login')

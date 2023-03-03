@@ -11,16 +11,11 @@ module.exports = {
     addCategory: (data) => {
         return new Promise(async (resolve, reject) => {
 
-            let subcategories = await user.category.findOne({ categoryName: data.categoryname })
-
-            console.log(subcategories);
+            let categories = await user.category.findOne({ categoryName: data.categoryname })
 
 
+            if (categories) {
 
-            if (subcategories) {
-
-
-                console.log('if');
                 await user.category.updateOne({ categoryName: data.categoryname },
                     {
                         '$push': {
@@ -28,11 +23,10 @@ module.exports = {
                             subcategories: { subcategoryName: data.subcategoryname }
                         }
                     }).then((data) => {
-                        resolve(data)
+                        resolve({data,categorystatus:true})
                     })
 
             } else {
-                console.log('else');
                 let categorysub = {
                     subcategoryName: data.subcategoryname
                 }
@@ -41,7 +35,7 @@ module.exports = {
                     subcategories: categorysub
                 })
                 await categoryData.save().then((data) => {
-                    resolve(data)
+                    resolve({data,categorystatus:false})
                 })
             }
 
@@ -54,7 +48,7 @@ module.exports = {
     viewAddCategory: () => {
         return new Promise(async (resolve, reject) => {
             await user.category.find().exec().then((response) => {
- console.log(response);
+                console.log(response);
                 resolve(response)
 
             })
@@ -77,7 +71,7 @@ module.exports = {
     editCategory: (editCategoryId) => {
         return new Promise(async (resolve, reject) => {
             await user.category.find({ _id: editCategoryId }).exec().then((response) => {
-                console.log(response+"edit cate");
+                console.log(response + "edit cate");
                 resolve(response[0])
             })
         })
@@ -85,11 +79,14 @@ module.exports = {
     //post edit ctaegory
 
     postEditCategory: (editedId, editedData) => {
+        console.log(editedData.editsubCategoryname);
         return new Promise(async (resolve, reject) => {
-            await user.category.updateOne({ _id: editedId }, { $set: { categoryName: editedData.editCategoryname ,subcategoryName:editedData.editsubCategoryname} }).then((response) => {
+            await user.category.updateOne({ _id: editedId }, { $set: { categoryName: editedData.editCategoryname, subcategories: { subcategoryName: editedData.editsubCategoryname } } }).then((response) => {
                 console.log(response);
+                resolve(response)
                 console.log("================mAINRESPONSE++++++++++");
             })
         })
     },
 }
+

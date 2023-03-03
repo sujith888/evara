@@ -28,11 +28,11 @@ router.post("/login",adminController.postAdminLogin)
 
 router.get("/logout",check.auth,auths.auth,adminController.getAdminLogOut)
  
-router.get("/view_users",check.auth,adminusercontroller.getViewUser)
+router.get("/view_users",check.auth,auths.auth,adminusercontroller.getViewUser)
 
-router.get("/block_users/:id",check.auth, adminusercontroller.getBlockUser)
+router.get("/block_users",check.auth, adminusercontroller.getBlockUser)
 
-router.get("/unblock_users/:id", check.auth,adminusercontroller.getUnBlockUser)
+router.get("/unblock_users", check.auth,adminusercontroller.getUnBlockUser)
 
 router.get("/add_category",check.auth,admincategorycontroller.getCategory)
 
@@ -83,6 +83,10 @@ router.get("/list_banner",check.auth, adminproductcontroller.listBanner)
 router.get("/edit_banner",check.auth, adminproductcontroller.getEditBanner)
 
 router.post("/edit_banner",upload.editBannerupload,check.auth, adminproductcontroller.postEditBanner)
+
+router.get('/sales_report',check.auth,adminproductcontroller.getSalesReport)
+
+router.post('/sales_report',check.auth, adminproductcontroller.postSalesReport)
 
 
 

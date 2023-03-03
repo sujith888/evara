@@ -9,19 +9,19 @@ const adminLoginhelpers = require('../../helpers/adminHelpers/adminLoginhelpers'
 
 
 
-
+let admins;
   
 module.exports={
 
  // get login
 
      getAdminLogin:(req, res)=> {
-      let admins=req.session.admin
+      admins=req.session.admin
         if(req.session.adminloggedIn){
-          res.render("admin/admin-dashboard",{layout:"adminLayout",admins})
+  res.redirect('/admin')
         }else{
        
-      res.render('admin/login',{layout:'adminLayout'})
+          res.redirect('/admin/login')
         }
         
       },
@@ -42,6 +42,7 @@ module.exports={
       //   else{
       //     adminloginErr=true
           adminLoginhelpers.postlogin(req.body).then((response)=>{
+            console.log(response);
             req.session.adminloggedIn=true
             req.session.admin=response
          let status=   response.loggedinstatus
@@ -63,7 +64,7 @@ module.exports={
   getDashboard:async (req, res) =>{
     
    if(req.session.adminloggedIn){
-  let admins=req.session.admin
+ let  admins=req.session.admin
 
   let totalProducts, days=[]
   let ordersPerDay = {};
@@ -96,8 +97,6 @@ module.exports={
 
       ans['createdAt']=result[i].createdAt
       days.push(ans)
-      
-      ans={}
    
      
       
@@ -140,8 +139,7 @@ days.forEach((order) => {
 getAdminLogOut:(req,res)=>{
   if(req.session.adminloggedIn){
   req.session.adminloggedIn=false
-
-  res.render("admin/login",{layout: "adminLayout"})
+ res.redirect('/admin/login')
   }
 },
 
@@ -171,8 +169,8 @@ postsignin:(req,res)=>{
 
    adminLoginHelper.viewAdmins().then((response)=>{
 
-       let admins=response
-       res.render('admin/view-admins',{layout: "adminLayout",admins})
+       let admin=response
+       res.render('admin/view-admins',{layout: "adminLayout",admin,admins})
 
    })
 

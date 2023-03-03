@@ -186,9 +186,8 @@ module.exports = {
           }
 
         },
+      
       ]).then((cartItems) => {
-
-
 
         resolve(cartItems)
 
@@ -270,10 +269,11 @@ module.exports = {
             total: { $sum: { $multiply: ["$quantity", "$product.Price"] } }
           }
         }
+      
       ]).then((total) => {
 
 
-        
+  
         resolve(total[0]?.total)
 
 
@@ -282,6 +282,7 @@ module.exports = {
     })
 
   },
+  
   subtotal: (userId) => {
     return new Promise(async (resolve, reject) => {
 

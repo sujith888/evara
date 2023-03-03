@@ -47,8 +47,8 @@ module.exports={
         { name: 'image3', maxCount: 1 },
         { name: 'image4', maxCount: 1 }
     ]),
-    addBannerupload:multer({storage:Storage}).single('image'),
-    editBannerupload:multer({storage:Storage}).single('image1'),
+    addBannerupload:multer({storage:addBanner}).single('image'),
+    editBannerupload:multer({storage:editBanner}).single('image1'),
 
 
 }

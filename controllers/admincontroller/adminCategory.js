@@ -13,19 +13,26 @@ getCategory:(req, res)=>{
     let admins=req.session.admin
     adminCategoryHelper.viewAddCategory().then((response)=>{
      var viewCategory=response
-     let sub=response[0].subcategories
-     console.log(response[0].subcategories);
+     let sub=response[0]?.subcategories
+     console.log(response[0]?.subcategories);
       res.render("admin/add-category", { layout: "adminLayout" ,viewCategory,admins,sub});
     })
     
   },
   //post method category
   
-  postCategory:(req, res)=>{
+  postCategory:async(req, res)=>{
         console.log(req?.body);
+      let response=await   adminCategoryHelper.viewAddCategory()
+          var viewCategory=response
+          let sub=response[0]?.subcategories
+          console.log(response[0]?.subcategories);
       adminCategoryHelper.addCategory(req?.body).then((data)=>{
-       
-        res.redirect('/admin/add_category')
+     let categoryStatus=data.categorystatus
+     console.log(categoryStatus);
+     res.render("admin/add-category", { layout: "adminLayout" ,categoryStatus,viewCategory,sub});
+
+
     })
      
   },

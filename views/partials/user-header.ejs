@@ -13,9 +13,12 @@
         </div>
         <div class="header-right">
           <div class="search-style-2">
-            <form action="/search" >
+            <form action="/search" method="post"  >
              
-              <input type="text"  id="keyword" onKeyUp="search()" placeholder="Search for items..." />
+              <input type="text"  name="search"  id="keyword" placeholder="Search for items..." />
+
+              <button type="submit"     style="display: none;">Submit</button>
+
             </form>
           </div>
           <div style="background-color: aliceblue; margin-right: 8 rem;">
@@ -40,7 +43,7 @@
                     src="assets/imgs/theme/icons/icon-heart.svg"
                   />
                   <%if( locals.users){%>
-                    <span class="pro-count blue" id="wish-count"><%= locals.wishcount %></span>
+                    <span class="pro-count blue" id="wish-count"><%= locals.wishCount %></span>
                     <%}%>
                 </a>
               </div>
@@ -202,7 +205,7 @@
 
 
 
-<script>
+<!-- <script>
 
 
 function search() {
@@ -217,4 +220,4 @@ console.log(response);
   })
     
 }
-</script>
+</script> -->

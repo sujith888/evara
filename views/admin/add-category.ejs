@@ -10,6 +10,11 @@
         >
           <label for="">Category Name</label>
           <input type="text" name="categoryname" class="form-control" />
+          <% if(locals.categoryStatus) {%>
+       <h6 class="message   " style="color: red;"> This Category Already Exist </h6>
+          <%} else{%>
+            
+           <%}%>
           <label for="">SubCategory Name</label>
           <input type="text" name="subcategoryname" class="form-control" />
           <button type="submit" class="btn btn-success mt-4">Submit</button>
@@ -57,3 +62,11 @@
     </div>
   </div>
 </section>
+
+
+
+<script>
+  setTimeout(function () {
+    document.querySelector('.message').style.display = 'none';
+  }, 3000);
+</script>

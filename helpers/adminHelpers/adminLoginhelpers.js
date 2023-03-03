@@ -47,6 +47,7 @@ module.exports = {
 
                 let admin = await user.admin.findOne({ email: data.email })
                 if (admin) {
+                    if (admin.blocked == false) {
 
                     await bcrypt.compare(data.password, admin.password).then((status) => {
                         if (status) {
@@ -63,9 +64,12 @@ module.exports = {
 
 
                 } else {
-                    resolve({ loggedinstatus: false })
+                    resolve({ loggedinstatus: false,blockedstatus:true })
                 }
-            } catch (err) {
+            }else{
+  resolve({loggedinstatus: false})
+            }
+         } catch (err) {
                 console.log(err);
             }
         })

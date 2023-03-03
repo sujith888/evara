@@ -4,13 +4,13 @@ const { category } = require('../../models/connection');
 const user = require("../../models/connection");
 const userProductControllers = require('../usercontroller/userProductControllers');
 
-
+let admins;
 module.exports = {
   //get add product
 
 
   getAddProduct: (req, res) => {
-    let admins = req.session.admin
+   admins = req.session.admin
     adminProductHelpers.getAddProduct().then((category) => {
       let response = category;
       console.log(response + 'i am response');
@@ -40,7 +40,7 @@ module.exports = {
 
 
   getViewproduct: (req, res) => {
-    let admins = req.session.admin
+   admins = req.session.admin
     adminProductHelpers.getViewProduct().then((response) => {
       res.render("admin/view-product", { layout: "adminLayout", response, admins });
     })
@@ -51,7 +51,7 @@ module.exports = {
   //edit view product
 
   editViewProduct: (req, res) => {
-    let admins = req.session.admin
+   admins = req.session.admin
     adminProductHelpers.viewAddCategory().then((response) => {
       console.log(response);
       let procategory = response
@@ -76,11 +76,11 @@ module.exports = {
     if (req.files) {
       Object.keys(req?.files).forEach((key) => {
         if (Array.isArray(req.files[key])) {
-          req.files[key].forEach((file) => {
+          req?.files[key]?.forEach((file) => {
             images.push(file.filename);
           });
         } else {
-          images.push(req.files[key].filename);
+          images.push(req?.files[key]?.filename);
         }
       });
     }
@@ -120,15 +120,13 @@ module.exports = {
         let day = orderDate.getDate();
         let month = orderDate.getMonth() + 1;
         let year = orderDate.getFullYear();
-        let hours = date.getHours();
-        let minutes = date.getMinutes();
-        let seconds = date.getSeconds();
-        return `${isNaN(day) ? "00" : day}-${isNaN(month) ? "00" : month}-${isNaN(year) ? "0000" : year
-          } ${date.getHours(hours)}:${date.getMinutes(minutes)}:${date.getSeconds(seconds)}`;
-      };
-    let admins=req.session.admin
 
-      res.render('admin/order-List', { layout: 'adminLayout', response, getDate ,admins})
+        return `${isNaN(day) ? "00" : day}-${isNaN(month) ? "00" : month}-${isNaN(year) ? "0000" : year
+          } `;
+      };
+     admins = req.session.admin
+
+      res.render('admin/order-List', { layout: 'adminLayout', response, getDate, admins })
     })
   },
 
@@ -137,23 +135,19 @@ module.exports = {
 
 
   getOrderDetails: (req, res) => {
-    console.log(req.query.orderid);
     adminProductHelpers.orderDetails(req.query.orderid).then((order) => {
       const getDate = (date) => {
         let orderDate = new Date(date);
         let day = orderDate.getDate();
         let month = orderDate.getMonth() + 1;
         let year = orderDate.getFullYear();
-        let hours = date.getHours();
-        let minutes = date.getMinutes();
-        let seconds = date.getSeconds();
         return `${isNaN(day) ? "00" : day}-${isNaN(month) ? "00" : month}-${isNaN(year) ? "0000" : year
-          } ${date.getHours(hours)}:${date.getMinutes(minutes)}:${date.getSeconds(seconds)}`;
+          } `;
       };
-      let admins=req.session.admin
+     admins = req.session.admin
       let products = order.orders[0].productDetails
       let total = order.orders
-      res.render('admin/order-details', { layout: 'adminLayout', order, products, total, getDate,admins })
+      res.render('admin/order-details', { layout: 'adminLayout', order, products, total, getDate, admins })
     })
 
   },
@@ -184,14 +178,14 @@ module.exports = {
 
 
   orderPage: (req, res) => {
-    let admins=req.session.admin
-   
+   admins = req.session.admin
+
     adminProductHelpers.OrderPage(req.query.userid).then((Response) => {
-  let response=Response[0].orders
-  console.log(response);
-      res.render('admin/adminorder-list',{ layout: 'adminLayout', response ,admins})
-      
-     
+      let response = Response[0]?.orders
+      console.log(response);
+      res.render('admin/adminorder-list', { layout: 'adminLayout', response, admins })
+
+
     })
 
   },
@@ -204,18 +198,15 @@ module.exports = {
         let day = orderDate.getDate();
         let month = orderDate.getMonth() + 1;
         let year = orderDate.getFullYear();
-        let hours = date.getHours();
-        let minutes = date.getMinutes();
-        let seconds = date.getSeconds();
         return `${isNaN(day) ? "00" : day}-${isNaN(month) ? "00" : month}-${isNaN(year) ? "0000" : year
-          } ${date.getHours(hours)}:${date.getMinutes(minutes)}:${date.getSeconds(seconds)}`;
+          }`;
       };
-      let admins=req.session.admin
+     admins = req.session.admin
       let products = order.orders[0].productDetails
       let total = order.orders
-      res.render('admin/order-details', { layout: 'adminLayout', order, products, total, getDate,admins })
+      res.render('admin/order-details', { layout: 'adminLayout', order, products, total, getDate, admins })
     })
-   
+
   },
 
   getAddBanner: (req, res) => {
@@ -237,9 +228,9 @@ module.exports = {
 
     adminProductHelpers.listBanner().then((response) => {
 
-      let admins=req.session.admin
+      admins = req.session.admin
 
-      res.render('admin/list-banner', { layout: 'adminLayout', response ,admins})
+      res.render('admin/list-banner', { layout: 'adminLayout', response, admins })
 
     })
 
@@ -251,8 +242,8 @@ module.exports = {
   getEditBanner: (req, res) => {
 
     adminProductHelpers.editBanner(req.query.banner).then((response) => {
-     
-      res.render('admin/edit-banner', { layout: 'adminLayout', response })
+
+      res.render('admin/edit-banner', { layout: 'adminLayout', response ,admins})
 
     })
 
@@ -263,10 +254,44 @@ module.exports = {
 
   postEditBanner: (req, res) => {
 
-    adminProductHelpers.postEditBanner(req.query.editbanner, req.body,req.file.filename).then((response) => {
- res.redirect('/admin/list_banner')
+    console.log( req.file.filename);
+    adminProductHelpers.postEditBanner(req.query.editbanner, req.body, req.file.filename).then((response) => {
+      res.redirect('/admin/list_banner')
 
     })
+  },
+
+  //sales report
+
+  getSalesReport: async (req, res) => {
+    let admins=req.session.admin
+    console.log('reportttttttttttt');
+    let report = await adminProductHelpers.getSalesReport()
+    let Details = []
+
+    report.forEach(orders => { Details.push(orders.orders) })
+    // report.forEach(orders => {userdata.push( orders.orders.shippingAddress)})
+
+console.log(Details);
+    res.render('admin/sales-report', { layout: "adminLayout", Details,admins })
+
+
+  },
+
+  postSalesReport:(req, res)=>
+  {
+    let Details = [];
+let admins=req.session.admin
+  console.log(req.body);
+    adminProductHelpers.postReport(req.body).then((orderdata)=>
+    {
+
+      orderdata.forEach(orders => {Details.push( orders.orders)})
+
+      res.render('admin/sales-report',{layout: "adminLayout", admins,Details})
+    })
+    
+
   }
 
 

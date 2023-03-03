@@ -47,12 +47,12 @@
                   <td>
                       <%if(user.blocked){%>
                         
-                        <a href ="/admin/unblock_users/<%= user._id %>" class="btn btn-success" >UnBlock</a>
+                        <a href ="/admin/unblock_users?userid=<%= user._id %>" class="btn btn-success" >UnBlock</a>
                  
                         
                       <%}
                       else{%>
-                        <a href ="/admin/block_users/<%= user._id %>" class="btn btn-danger" onclick="return confirm('are you want to block <%=user.username%>?')">Block</a>
+                        <a href ="/admin/block_users?userid=<%= user._id %>" class="btn btn-danger" onclick="return confirm('are you want to block <%=user.username%>?')">Block</a>
 
               
                       <%}

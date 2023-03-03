@@ -329,14 +329,64 @@ module.exports = {
     })
   },
 
-  totalUserCount:()=>{
+  totalUserCount: () => {
+
+    return new Promise(async (resolve, reject) => {
+      let response = await user.user.find().exec()
+
+      resolve(response)
+
+    })
+  },
+
+  // sales report
+
+  getSalesReport: async () => {
+    return new Promise(async (resolve, reject) => {
+      let response = await user.order.aggregate([
+        {
+          $unwind: "$orders"
+        },
+        {
+          $match: {
+            "orders.OrderStatus": "Delivered"
+          }
+        },
+      ])
+      console.log(response);
+      resolve(response)
+    })
+  },
+
+  // post sale report
+
+
+  postReport: (date) => {
+    let start = new Date(date.startdate);
+  let end = new Date(date.enddate);
 
   return new Promise(async(resolve, reject) => {
-    let response=await user.user.find().exec()
-      
+  await user.order.aggregate([
+  {
+    $unwind: "$orders",
+  },
+  {
+    $match: {
+      $and: [
+        { "orders.OrderStatus": "Delivered" },
+        {"orders.createdAt": { $gte: start, $lte: end }}
+        
+      ]
+    }
+  }
+])
+  .exec()
+  .then((response) => {
+    console.log(response);
     resolve(response)
-  
   })
+})
+
   },
 }
 

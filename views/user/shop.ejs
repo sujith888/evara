@@ -78,7 +78,13 @@
                                       <div class="product-action-1">
                                           <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal">
 <i class="fi-rs-search"></i></a>
-                                          <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addtowishlist('<%-response._id%>')" ><i class="fi-rs-heart"></i></a>
+                                          <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addtowishlist('<%-response._id%>');Swal.fire({
+                                            position: 'center',
+                                            icon: 'success',
+                                            title: 'Product is successfully added to wishlist',
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                          })" ><i class="fi-rs-heart"></i></a>
                                           <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                       </div>
                                       <div class="product-badges product-badges-position product-badges-mrg">
@@ -102,7 +108,13 @@
                                      
                                       <div class="product-action-1 show">
                                     
-                                      <button type="button" aria-label="Add To Cart" class="action-btn hover-up"  onclick="addtocart('<%-response._id%>')" >  <i class="fi-rs-shopping-bag-add" ></i>  </button>  
+                                      <button type="button" aria-label="Add To Cart" class="action-btn hover-up"  onclick="addtocart('<%-response._id%>');Swal.fire({
+                                        position: 'center',
+                                        icon: 'success',
+                                        title: 'Product is successfully added to cart',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                      })" >  <i class="fi-rs-shopping-bag-add" ></i>  </button>  
                                             
                                         
                                       </a>       
@@ -136,13 +148,17 @@
                               <li><a href="/sub_category?sub=<%=category.categoryName%>"><%=category.categoryName%></a></li>
                               <%}) %> 
                           </ul>
-                          <div class="sort-container">
-                            <label for="sort-select">Sort by:</label>
-                            <select id="sort-select" onchange="sortProducts()">
-                              <option value="price-low-to-high">Price: Low to High</option>
-                              <option value="price-high-to-low">Price: High to Low</option>
-                            </select>
-                          </div>
+                          <form id="sort-form" method="POST" action="/sort">
+                            <div class="sort-container">
+                              <label for="sort-select"><h5 class="section-title style-1 mb-30 wow fadeIn animated">Sort by:</h5><h5></h5></label>
+                              <select id="sort-select" name="selectedValue" onchange="this.form.submit()">
+                                <option value=""><a href="#">Sort By Price</a></option>
+                                <option value="price-low-to-high"><a href="#">Price: Low to High</a></option>
+                                <option  value="price-high-to-low"><a href="#">Price: High to Low</a></option>
+                              </select>
+                            </div>
+                          </form>
+                        
                       </div>
                   </div>
               </div>
@@ -189,20 +205,19 @@
 }
 
 
-function sortProducts() {
-  const sortSelect = document.getElementById('sort-select').value;
+// function sortProducts() {
+//   const sortSelect = document.getElementById('sort-select').value;
 
 
-  $.ajax({
-    url: '/sort',
-    method: 'POST',
-    data: { sort: sortSelect },
-    success: (response) => {
-        console.log();
-        $('#ajax-response').html(response);
-    }
-  });
-}
+//   $.ajax({
+//     url: '/sort',
+//     method: 'POST',
+//     data: { sort: sortSelect },
+//     success: (item) => {
+
+//     }
+//   });
+// }
 
 
 </script>

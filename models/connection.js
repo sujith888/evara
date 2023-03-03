@@ -196,7 +196,11 @@ const bannerSchema = new mongoose.Schema({
   updated_at: {
     type: Date,
     default: Date.now
-  }
+  },
+  // positi: {
+  //   type: String,
+  //   required: true
+  // },
 });
 module.exports={
  user :mongoose.model('user',userschema),
