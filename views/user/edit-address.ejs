@@ -1,0 +1,57 @@
+
+
+
+        
+    <section class="mt-50 mb-50">
+        <div class="container">
+           
+           
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-25">
+                        <h4>Edit  </h4>
+                    </div>
+                     <h2><%response._id%></h2>
+                    <form  action="/edit_address?addressId=<%response._id%>"  method="post">
+                        <div class="form-group">
+                            <input type="text" required="" name="fname" placeholder="First name *" value="<%=response.fname%>">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" required="" name="lname" placeholder="Last name *" value="<%=response.lname%>">
+                        </div>
+                        <div class="form-group">
+                            <input required="" type="text" name="street" placeholder="Street Name" value="<%=response.street%>">
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="text" name="apartment" required="" placeholder="Apartment *" value="<%=response.apartment%>">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="city" required="" placeholder="City" value="<%=response.city%>">
+                        </div>
+                        <div class="form-group">
+                            <input required="" type="text" name="state" placeholder="State" value="<%=response.state%>">
+                        </div>
+                        <div class="form-group">
+                            <input required="" type="text" name="pincode" placeholder="Pincode" value="<%=response.pincode%>">
+                        </div>
+                        <div class="form-group">
+                            <input required="" type="text" name="mobile" placeholder="Mobile" value="<%=response.mobile%>">
+                        </div>
+                        <div class="form-group">
+                            <input required="" type="text" name="email" placeholder="email" value="<%=response.email%>">
+                        </div>
+                        <button type="submit" class="btn btn-dark">Continue</button>
+                      </form>
+                      
+                   
+                </div>
+              
+            </div>
+        </div>
+    </section>
+
+
+
+
+

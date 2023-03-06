@@ -28,7 +28,6 @@ let users= require("../models/connection")
           next()
           
         }else{
-          console.log('hlo');
 
           res.redirect('/logout')
         }

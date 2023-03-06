@@ -88,6 +88,20 @@ router.get('/sales_report',check.auth,adminproductcontroller.getSalesReport)
 
 router.post('/sales_report',check.auth, adminproductcontroller.postSalesReport)
 
+router.get('/add_coupon',check.auth, adminproductcontroller.getAddCoupon)
+
+router.post('/add_coupon',check.auth, adminproductcontroller.postAddCoupon)
+
+router.get("/list_coupons", check.auth, adminproductcontroller.coupons);
+
+router.delete("/coupon_delete",check.auth, adminproductcontroller.deleteCoupon);
+
+
+
+
+
+
+
 
 
 

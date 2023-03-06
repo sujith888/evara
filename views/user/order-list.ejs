@@ -122,14 +122,16 @@
                     <%= address[0].street%>
                   </p>
                   <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span>
-                    <%=orderDetails.totalPrice%>
+                    <%=orderDetails.grandTotal%> 
                   </p>
                 </div>
                 <div class="d-flex justify-content-between pt-2">
                   <p class="fw-bold mb-0">
                     <%= address[0].city%>
-                  </p>
-                  <p class="text-muted mb-0"><span class="fw-bold me-4"></span></p>
+                  </p>                    
+                   
+                    <p class="text-muted mb-0"><span class="fw-bold me-4">Discount:</span><%=orderDetails.discountAmount%></p>
+
                 </div>
                 <div class="d-flex justify-content-between pt-2">
                   <p class="fw-bold mb-0">

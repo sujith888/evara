@@ -27,8 +27,8 @@ var instance = new Razorpay({
 
 module.exports = {
 
-  
- 
+
+
 
   // shop page  document count 
 
@@ -784,10 +784,10 @@ module.exports = {
       // Your own data
       sender: {
         company: "A 2 Z Ecommerce",
-        address: "Washington DC",
+        address: "kerala",
         zip: "4567 CD",
-        city: "Los santos",
-        country: "America",
+        city: "Palakkad",
+        country: "india",
 
       },
       // Your recipient
@@ -846,6 +846,65 @@ module.exports = {
     };
 
     return data;
+  },
+  // total checkout amount 
+
+  totalAmount: (userId) => {
+    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+    return new Promise(async (resolve, reject) => {
+
+
+      const id = await user.cart.aggregate([
+        {
+          $match: {
+            user: ObjectId(userId)
+          }
+        },
+        {
+          $unwind: '$cartItems'
+        },
+
+
+        {
+          $project: {
+            item: '$cartItems.productId',
+            quantity: '$cartItems.Quantity'
+          }
+        },
+
+
+        {
+          $lookup: {
+            from: 'products',
+            localField: "item",
+            foreignField: "_id",
+            as: 'carted'
+          }
+        },
+        {
+          $project: {
+            item: 1, quantity: 1, product: { $arrayElemAt: ['$carted', 0] }
+          }
+
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: { $multiply: ["$quantity", "$product.Price"] } }
+          }
+        }
+
+      ]).then((total) => {
+
+
+        console.log(total);
+        resolve(total[0]?.total)
+
+
+      })
+
+    })
+
   },
 }
 

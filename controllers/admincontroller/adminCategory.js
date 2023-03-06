@@ -22,7 +22,8 @@ getCategory:(req, res)=>{
   //post method category
   
   postCategory:async(req, res)=>{
-        console.log(req?.body);
+    
+    let admins=req.session.admin
       let response=await   adminCategoryHelper.viewAddCategory()
           var viewCategory=response
           let sub=response[0]?.subcategories
@@ -30,7 +31,7 @@ getCategory:(req, res)=>{
       adminCategoryHelper.addCategory(req?.body).then((data)=>{
      let categoryStatus=data.categorystatus
      console.log(categoryStatus);
-     res.render("admin/add-category", { layout: "adminLayout" ,categoryStatus,viewCategory,sub});
+     res.render("admin/add-category", { layout: "adminLayout" ,categoryStatus,viewCategory,sub,admins});
 
 
     })

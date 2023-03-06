@@ -1,0 +1,67 @@
+<div class="col-12 grid-margin">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title pb-5">Add new coupon</h4>
+        <form class="form-sample" method="POST" action="/admin/add_coupon" >
+          <!-- <p class="card-description">
+                        Personal info
+                      </p> -->
+          <div class="alert alert-danger" id="errorDisplay" role="alert" hidden>
+  
+          </div>
+  
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Validity</label>
+                <div class="col-sm-9">
+                  <input type="date" name="validity" class="form-control" id="validity" cols="45" rows="5"></input>
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Min Purchase </label>
+                <div class="col-sm-9">
+                  <input id="minAmount" name="minpurchase"type="text" class="form-control" />
+                </div>
+              </div>
+            </div>
+  
+  
+            <div class="col-md-6 discPer ">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Discount ( % )</label>
+                <div class="col-sm-9">
+                  <input id="discountPercentage" name="discount" type="number" class="form-control" />
+                </div>
+              </div>
+            </div>
+  
+            <div class="col-md-6" id="maxdiscountfield">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Max Discount(Rs)</label>
+                <div class="col-sm-9">
+                  <input id="maxDiscountValue" name="maxdiscount" type="text" class="form-control" />
+                </div>
+              </div>
+            </div>
+  
+  
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label" >Description(T&C)</label>
+                <div class="col-sm-9">
+                  <textarea name="description" class="form-control" id="description" cols="45" rows="5"></textarea>
+                </div>
+              </div>
+            </div>
+  
+            <button type="submit"   class="btn btn-outline-info col-1" >submit</button>
+  
+          </div>
+      </div>
+      </form>
+    </div>
+  </div>
+  </div>

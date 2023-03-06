@@ -189,6 +189,7 @@ module.exports = {
       
       ]).then((cartItems) => {
 
+         console.log(cartItems);
         resolve(cartItems)
 
 
@@ -226,7 +227,6 @@ module.exports = {
   // total checkout amount 
 
   totalCheckOutAmount: (userId) => {
-
     return new Promise(async (resolve, reject) => {
 
 
@@ -271,9 +271,8 @@ module.exports = {
         }
       
       ]).then((total) => {
-
-
-  
+ 
+    console.log(total);
         resolve(total[0]?.total)
 
 

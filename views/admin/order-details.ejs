@@ -19,9 +19,9 @@
                         <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                             <form action="/admin/order_details?orderId=<%=order.orders[0]._id%>" method="POST">
                             <select class="form-select d-inline-block mb-lg-0 mb-15 mw-200" name="status">
-                                <option>Change status</option>
-                                <option>Awaiting payment</option>
-                                <option>success</option>
+                                <option>Awaiting Payment</option>
+                                <option>Cancelled</option>
+                                <option>Success</option>
                                 <option>Shipped</option>
                                 <option>Delivered</option>
                             </select>
@@ -104,7 +104,8 @@
                                             <td> <%=order.productsPrice%> </td>
                                             <td> <%=order.quantity%> </td>
                                             <% }) %> 
-                                            <td class="text-end"> <%=total.totalPrice%></td>
+
+                                            <td class="text-end"> <%=locals.total%></td>
                                            
                                         </tr>
                                       

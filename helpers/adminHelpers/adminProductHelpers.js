@@ -151,7 +151,6 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
 
       let order = await user.order.findOne({ 'orders._id': orderId }, { 'orders.$': 1 })
-      console.log(order + '----------------------------------------------------------------');
       resolve(order)
     })
 
