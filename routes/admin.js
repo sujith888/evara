@@ -62,7 +62,7 @@ router.get("/order_details", check.auth, adminproductcontroller.getOrderDetails)
 
 router.post("/order_details", check.auth, adminproductcontroller. postOrderDetails)
 
-router.get("/find_subcategory", check.auth, adminproductcontroller. findSubcategory)
+router.get("/find_subcategory", check.auth, admincategorycontroller. findSubcategory)
 
 router.get("/view_admin", check.auth, adminController.getViewAdmins)
 

@@ -206,10 +206,10 @@ const bannerSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  // positi: {
-  //   type: String,
-  //   required: true
-  // },
+  page: {
+    type: String,
+    required: true
+  },
 });
 
 const couponSchema = new mongoose.Schema({

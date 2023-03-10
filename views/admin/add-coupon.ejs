@@ -14,7 +14,7 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Validity</label>
                 <div class="col-sm-9">
-                  <input type="date" name="validity" class="form-control" id="validity" cols="45" rows="5"></input>
+                  <input type="date" name="validity" class="form-control" required="" id="validity" cols="45" rows="5"></input>
                 </div>
               </div>
             </div>
@@ -23,7 +23,7 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Min Purchase </label>
                 <div class="col-sm-9">
-                  <input id="minAmount" name="minpurchase"type="text" class="form-control" />
+                  <input id="minAmount" name="minAmount" required="" id="minpurchase"type="text" class="form-control" onkeyup="validateMinAmount" />
                 </div>
               </div>
             </div>
@@ -33,7 +33,7 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Discount ( % )</label>
                 <div class="col-sm-9">
-                  <input id="discountPercentage" name="discount" type="number" class="form-control" />
+                  <input id="discountPercentage" name="discount" required="" type="number" class="form-control" />
                 </div>
               </div>
             </div>
@@ -42,7 +42,7 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Max Discount(Rs)</label>
                 <div class="col-sm-9">
-                  <input id="maxDiscountValue" name="maxdiscount" type="text" class="form-control" />
+                  <input id="maxDiscountValue" name="maxdiscount"  required="" type="text" class="form-control" />
                 </div>
               </div>
             </div>
@@ -52,12 +52,12 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label" >Description(T&C)</label>
                 <div class="col-sm-9">
-                  <textarea name="description" class="form-control" id="description" cols="45" rows="5"></textarea>
+                  <textarea name="description" class="form-control" required="" id="description" cols="45" rows="5"></textarea>
                 </div>
               </div>
             </div>
   
-            <button type="submit"   class="btn btn-outline-info col-1" >submit</button>
+            <button type="submit"   class="btn btn-outline-info col-1" onclick="validatorCoupen()" >submit</button>
   
           </div>
       </div>
@@ -65,3 +65,4 @@
     </div>
   </div>
   </div>
+  

@@ -21,10 +21,10 @@
 
             </form>
           </div>
-          <div style="background-color: aliceblue; margin-right: 8 rem;">
-            <%if(locals.users){%>
+          <div  margin-right: 8 rem;">
+            <%if(locals.userSession){%>
              
-              <i class="fi-rs-user"></i><a href="/profile"><%=users.userName%></a>
+              <i class="fi-rs-user" style="color:black;"></i><a  style="color:black;" href="/profile"><%=userSession.userName%></a>
                <%}else {%>
               <i class="fi-rs-user"></i><a href="/login">LogIn</a>
               <%}%>
@@ -42,8 +42,8 @@
                     alt="Evara"
                     src="assets/imgs/theme/icons/icon-heart.svg"
                   />
-                  <%if( locals.users){%>
-                    <span class="pro-count blue" id="wish-count"><%= locals.wishCount %></span>
+                  <%if( locals.userSession){%>
+                    <span class="pro-count blue" style="background-color: black;" id="wish-count"><%= locals.wishCount %></span>
                     <%}%>
                 </a>
               </div>
@@ -53,8 +53,8 @@
                     alt="Evara"
                     src="assets/imgs/theme/icons/icon-cart.svg"
                   />
-                   <%if( locals.users){%>
-                  <span class="pro-count blue" id="cart-count"><%= locals.count %></span>
+                   <%if( locals.userSession){%>
+                  <span class="pro-count blue" style="background-color: black;" id="cart-count"><%= locals.count %></span>
                   <%}%>
                   </div>
                 </div>
@@ -70,7 +70,7 @@
       <div class="header-wrap header-space-between position-relative main-nav">
         <div class="logo logo-width-1 d-block d-lg-none">
           <h4>
-            <span style="color: darkgreen; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+            <span style="color:#050301; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
 
 ;">A 2 Z</span><br> ECommerce
 
@@ -93,13 +93,13 @@
                 <li class="position-static">
                   <a href="/order"   style="color: black;">Orders <i class=""></i></a>
                 </li>
-                <li>
+                <!-- <li>
                   <a href="blog-category-grid.html"  style="color: black;">About <i class=""></i></a>
-                </li>
+                </li> -->
 
-                <li>
+                <!-- <li>
                   <a href="page-contact.html"  style="color: black;">Contact </a>
-                </li>
+                </li> -->
               </ul>
             </nav>
           </div>

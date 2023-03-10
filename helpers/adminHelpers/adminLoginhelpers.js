@@ -1,6 +1,6 @@
 
 
-const user = require("../../models/connection");
+const db = require("../../models/connection");
 const multer = require('multer');
 const { response } = require("../../app");
 const bcrypt = require('bcrypt');
@@ -26,7 +26,7 @@ module.exports = {
 
             let hashedPassword = await bcrypt.hash(data.password, 10)
 
-            const admindata = user.admin({
+            const admindata = db.admin({
                 name: data.name,
                 password: hashedPassword,
                 email: data.email,
@@ -45,7 +45,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             try {
 
-                let admin = await user.admin.findOne({ email: data.email })
+                let admin = await db.admin.findOne({ email: data.email })
                 if (admin) {
                     if (admin.blocked == false) {
 
@@ -80,7 +80,7 @@ module.exports = {
 
     viewAdmins: () => {
         return new Promise(async (resolve, reject) => {
-            await user.admin.find({ role: { $ne: "superadmin" } }).then((response) => {
+            await db.admin.find({ role: { $ne: "superadmin" } }).then((response) => {
 
                 resolve(response)
             })
@@ -91,7 +91,7 @@ module.exports = {
 
     blockAdmin:(adminid)=>{
         return new Promise(async(resolve, reject) => {
-            await user.admin.updateOne({_id:adminid},{
+            await db.admin.updateOne({_id:adminid},{
                 $set:{
                     blocked:true
                 }
@@ -109,7 +109,7 @@ module.exports = {
     unBlockAdmin:(adminid)=>{
         return new Promise(async(resolve, reject) => {
            
-                await user.admin.updateOne({_id:adminid},{
+                await db.admin.updateOne({_id:adminid},{
                     $set:{
                         blocked:false
                     }
@@ -122,4 +122,77 @@ module.exports = {
 
     
     },
+
+    
+  // dash board mangement helper functions 
+
+
+  getOrderByDate: () => {
+    return new Promise(async (resolve, reject) => {
+      const startDate = new Date('2022-01-01');
+      await db.order.find({ createdAt: { $gte: startDate } }).then((response) => {
+        resolve(response)
+
+      })
+    });
+  },
+
+  // get all orders 
+
+  getAllOrders: () => {
+    return new Promise(async (resolve, reject) => {
+      let order = await db.order.aggregate([
+        { $unwind: '$orders' },
+
+      ]).then((response) => {
+        resolve(response)
+      })
+
+    })
+  },
+
+
+  getCodCount: () => {
+    return new Promise(async (resolve, reject) => {
+      let response = await db.order.aggregate([
+        {
+          $unwind: "$orders"
+        },
+        {
+          $match: {
+            "orders.paymentmode": "COD"
+          }
+        },
+      ])
+      resolve(response)
+    })
+  },
+
+
+  getOnlineCount: () => {
+    return new Promise(async (resolve, reject) => {
+      let response = await db.order.aggregate([
+        {
+          $unwind: "$orders"
+        },
+        {
+          $match: {
+            "orders.paymentmode": "online"
+          }
+        },
+      ])
+      resolve(response)
+    })
+  },
+
+  totalUserCount: () => {
+
+    return new Promise(async (resolve, reject) => {
+      let response = await db.user.find().exec()
+
+      resolve(response)
+
+    })
+  },
+
 }

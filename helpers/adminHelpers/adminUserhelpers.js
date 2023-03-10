@@ -1,7 +1,7 @@
-const user =require("../../models/connection");
 const multer= require('multer');
 const { response } = require("../../app");
 const bcrypt = require('bcrypt');
+const db = require("../../models/connection");
 
 
 module.exports={
@@ -10,13 +10,11 @@ module.exports={
 
 
  getUsers: () => { 
-    console.log(user);
     return new Promise(async (resolve, reject) => {
         let userDatas = []
-        await user.user.find().exec().then((result) => {
+        await db.user.find().exec().then((result) => {
             userDatas = result
         })
-        console.log(userDatas);
         resolve(userDatas)
     })
 },
@@ -24,11 +22,9 @@ module.exports={
 
 
 UnblockUser: (userID) => {
-    console.log(userID);
     return new Promise(async (resolve, reject) => {
-        await user.user.updateOne({ _id: userID }, { $set: { blocked: false } })
+        await db.user.updateOne({ _id: userID }, { $set: { blocked: false } })
         .then((data) => {
-            console.log('Data updated');
             resolve()
         })
        
@@ -38,12 +34,10 @@ UnblockUser: (userID) => {
 //    blockuser 
 
 blockUser: (userID) => {
-    console.log(userID);
     return new Promise(async (resolve, reject) => {
 
-        await user.user.updateOne({ _id: userID }, { $set: { blocked: true } })
+        await db.user.updateOne({ _id: userID }, { $set: { blocked: true } })
             .then((data) => {
-                console.log('Data updated');
                 resolve()
             })
            

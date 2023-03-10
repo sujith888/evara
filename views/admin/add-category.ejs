@@ -9,14 +9,14 @@
          
         >
           <label for="">Category Name</label>
-          <input type="text" name="categoryname" class="form-control" />
+          <input type="text" name="categoryname" required="" class="form-control" />
           <% if(locals.categoryStatus) {%>
        <h6 class="message   " style="color: red;"> This Category Already Exist </h6>
           <%} else{%>
             
            <%}%>
           <label for="">SubCategory Name</label>
-          <input type="text" name="subcategoryname" class="form-control" />
+          <input type="text" name="subcategoryname" required="" class="form-control" />
           <button type="submit" class="btn btn-success mt-4">Submit</button>
         </form>
       </div>
@@ -29,7 +29,7 @@
     <div class="row mt-5 mx-auto">
       <div class="table-responsive">
         <div class="table-responsive">
-          <table class="table align-middle table-nowrap mb-0">
+          <table id="table7" class="table align-middle table-nowrap mb-0">
             <thead class="table-light">
               <tr>
                 <th class="align-middle" scope="col">NO:</th>
@@ -50,7 +50,7 @@
             
                 <td>
                   <a href="/admin/edit_category?edited=<%= viewCategory._id %>" class="btn btn-xs btn-danger"> Edit</a>
-                  <a href="/admin/delete_category?deletedid=<%=viewCategory._id %>" class="btn btn-xs btn-danger"> Delete</a>
+                  <a href="/admin/delete_category?deletedid=<%=viewCategory._id %>" class="btn btn-xs btn-danger"  onclick="return confirm('are you want to Delete <%=viewCategory.categoryName%>?')"> Delete</a>
                 </td>
               </tr>
               <% }) %>

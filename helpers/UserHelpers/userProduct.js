@@ -727,7 +727,6 @@ module.exports = {
   },
 
   getWishCount: (userId) => {
-    console.log('api called');
     return new Promise(async (resolve, reject) => {
       let count = 0;
       let wishlist = await user.WishList.findOne({ user: userId })
@@ -739,7 +738,7 @@ module.exports = {
     })
   },
 
-  // delete wish list 
+  // delete wish list pos
 
   deleteWishList: (body) => {
 

@@ -1,4 +1,4 @@
-const user = require("../../models/connection");
+const db = require("../../models/connection");
 const multer = require('multer');
 const { response } = require("../../app");
 
@@ -11,12 +11,12 @@ module.exports = {
     addCategory: (data) => {
         return new Promise(async (resolve, reject) => {
 
-            let categories = await user.category.findOne({ categoryName: data.categoryname })
+            let categories = await db.category.findOne({ categoryName: data.categoryname })
 
 
             if (categories) {
 
-                await user.category.updateOne({ categoryName: data.categoryname },
+                await db.category.updateOne({ categoryName: data.categoryname },
                     {
                         '$push': {
 
@@ -30,7 +30,7 @@ module.exports = {
                 let categorysub = {
                     subcategoryName: data.subcategoryname
                 }
-                const categoryData = new user.category({
+                const categoryData = new db.category({
                     categoryName: data.categoryname,
                     subcategories: categorysub
                 })
@@ -47,7 +47,7 @@ module.exports = {
 
     viewAddCategory: () => {
         return new Promise(async (resolve, reject) => {
-            await user.category.find().exec().then((response) => {
+            await db.category.find().exec().then((response) => {
                 console.log(response);
                 resolve(response)
 
@@ -59,7 +59,7 @@ module.exports = {
 
     deleteCatogory: (CategoryId) => {
         return new Promise(async (resolve, reject) => {
-            await user.category.deleteOne({ _id: CategoryId }).then((data) => {
+            await db.category.deleteOne({ _id: CategoryId }).then((data) => {
                 console.log(data);
                 resolve(data)
             })
@@ -70,7 +70,7 @@ module.exports = {
 
     editCategory: (editCategoryId) => {
         return new Promise(async (resolve, reject) => {
-            await user.category.find({ _id: editCategoryId }).exec().then((response) => {
+            await db.category.find({ _id: editCategoryId }).exec().then((response) => {
                 console.log(response + "edit cate");
                 resolve(response[0])
             })
@@ -81,12 +81,39 @@ module.exports = {
     postEditCategory: (editedId, editedData) => {
         console.log(editedData.editsubCategoryname);
         return new Promise(async (resolve, reject) => {
-            await user.category.updateOne({ _id: editedId }, { $set: { categoryName: editedData.editCategoryname, subcategories: { subcategoryName: editedData.editsubCategoryname } } }).then((response) => {
+            await db.category.updateOne({ _id: editedId }, { $set: { categoryName: editedData.editCategoryname, subcategories: { subcategoryName: editedData.editsubCategoryname } } }).then((response) => {
                 console.log(response);
                 resolve(response)
                 console.log("================mAINRESPONSE++++++++++");
             })
         })
     },
+
+
+     //  imported from view category
+
+  viewAddCategory: () => {
+    return new Promise(async (resolve, reject) => {
+      await db.category.find().exec().then((response) => {
+
+        resolve(response)
+
+      })
+    })
+  },
+
+
+  //  find subcategory
+  findSubcategory: (categoryname) => {
+
+    return new Promise(async (resolve, reject) => {
+      let result = await db.category.findOne({ categoryName: categoryname }).then((response) => {
+        resolve(response)
+      })
+
+      resolve(result)
+
+    })
+  },
 }
 

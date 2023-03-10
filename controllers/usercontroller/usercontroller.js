@@ -1,30 +1,39 @@
 const userhelpers = require('../../helpers/UserHelpers/UserHelpers')
 const otpLogin = require('../../allKeys/otpLogin')
 const client = require('twilio')(otpLogin.AccountSId, otpLogin.authtoken)
-const user = require("../../models/connection");
+const db = require("../../models/connection");
 const { log } = require('console');
 const userProduct = require('../../helpers/UserHelpers/userProduct');
 const { cart } = require('../../models/connection');
 const productHelpers = require('../../helpers/UserHelpers/productHelpers');
 const profileHelper = require('../../helpers/UserHelpers/profileHelper')
 
+const couponHelpers = require('../../helpers/adminHelpers/adminCouponHelpers')
+const cartHelper = require('../../helpers/UserHelpers/cartHelper')
+const addressHelper = require('../../helpers/UserHelpers/addressHelper')
+const userCategoryHelper = require('../../helpers/UserHelpers/categoryHelper')
+const couponHelper = require('../../helpers/UserHelpers/couponHelper')
+const orderHelper = require('../../helpers//UserHelpers/orderHelper')
 let loggedinstatus;
-let Number, wishCount, count, users;
+let Number, wishCount, count, userSession;
 
 module.exports = {
 
 
-  // user home
+  // user home page 
+
+
   getHome: async (req, res) => {
 
 
     if (req.session.loggedIn) {
-      users = req.session.user
+      userSession = req.session.user
       let response = await productHelpers.bestSeller()
-
+let banner= await userhelpers.findBanner()
+console.log(banner);
       wishCount = await userProduct.getWishCount(req.session.user.id)
-      let count = await userhelpers.getCartCount(req.session.user.id)
-      res.render('user/user', { users, count, wishCount, response })
+      count = await cartHelper.getCartCount(req.session.user.id)
+      res.render('user/user', { userSession, count, wishCount, response,banner })
 
     }
 
@@ -33,6 +42,8 @@ module.exports = {
 
   },
   // get user login
+
+
   getUserLogin: (req, res) => {
 
     if (req.session.loggedIn) {
@@ -45,12 +56,10 @@ module.exports = {
   postUserLogin: (req, res) => {
     userhelpers.doLogin(req.body).then((response) => {
       req.session.loggedIn = true
-      console.log(response);
       req.session.user = response
 
       let loggedinstatus = response.loggedinstatus
       let blockedStatus = response.blockedStatus
-      console.log(loggedinstatus + "loggedinstatus");
 
       if (loggedinstatus == true) {
         res.redirect('/')
@@ -69,7 +78,7 @@ module.exports = {
     if (req.session.userloggedIn) {
       res.redirect('/login')
     } else {
-      res.render("user/signup", { emailStatus });
+      res.render("user/signup",{ emailStatus:false});
     }
   },
   //post sign up
@@ -77,12 +86,12 @@ module.exports = {
     userhelpers.doSignUp(req.body).then((response) => {
 
 
-      var emailStatus = response.status
+      let emailStatus = response.status
       if (emailStatus == true) {
         res.redirect('/login')
       } else {
 
-        res.render('user/signup', { emailStatus })
+        res.render('user/signup', { emailStatus:true })
       }
 
     })
@@ -98,33 +107,6 @@ module.exports = {
   },
 
 
-  // get add-to-cart 
-
-  addToCart: async (req, res) => {
-
-
-    userhelpers.addToCartItem(req.params.id, req.session.user.id).then((response) => {
-      res.json(response.status)
-
-    })
-
-  },
-
-  //list cart  page
-
-  listCart: async (req, res) => {
-
-    users = req.session.user
-    let userId = req.session.user
-    let total = await userhelpers.totalCheckOutAmount(req.session.user.id)
-    count = await userhelpers.getCartCount(req.session.user.id)
-    userhelpers.listAddToCart(req.session.user.id).then((cartItems) => {
-      res.render('user/cart', { cartItems, total, userId, users, count, wishCount })
-    })
-  },
-
-
-
 
 
 
@@ -138,10 +120,8 @@ module.exports = {
   //post otp
 
   postOtp: async (req, res) => {
-    console.log(req.body.phonenumber);
     Number = req.body.phonenumber;
     users = await user.user.find({ phonenumber: Number }).exec()
-    console.log(users);
     if (users == false) {
       res.redirect('/login')
     } else {
@@ -168,10 +148,7 @@ module.exports = {
   },
 
   postVerify: (req, res) => {
-    console.log(req.body);
     OtpNumber = req.body.number
-    console.log(Number + '  Phone number');
-    console.log(Number + '  otp');
     client.verify.v2
       .services(otpLogin.serviceId)
       .verificationChecks.create({ to: `+91 ${Number}`, code: OtpNumber })
@@ -189,17 +166,47 @@ module.exports = {
 
   },
 
+  // <======================================= user profile mangement ========================>
+
   getProfile: async (req, res) => {
+    count=  await cartHelper.getCartCount(req.session.user.id)
+    wishCount = await productHelpers.getWishCount(req.session.user.id)
     let data = await profileHelper.findUser(req.session.user.id);
-    res.render("user/profile", { users, data });
+    res.render("user/profile", { userSession, data,wishCount,count });
   },
 
+
+
   updateProfile: (req, res) => {
-    console.log(req.body);
-     console.log(req.query.userId);
-     profileHelper.updateProfile(req.body, req.query.userId).then((data) => {
+    profileHelper.updateProfile(req.body, req.query.userId).then((data) => {
       res.json({ data });
     });
   },
+
+
+
+  resetPassword:async (req, res) => {
+    count= await cartHelper.getCartCount(req.session.user.id)
+    wishCount = await productHelpers.getWishCount(req.session.user.id)
+    let user = req.session.user.id;
+    res.render("user/reset-password", { userSession, user,count,wishCount });
+  },
+
+
+  updatePassword: async (req, res) => {
+    let passResponse = await profileHelper.verifyPassword(
+      req.body,
+      req.query.proId
+    );
+    if (passResponse) {
+      res.json(true);
+    } else {
+      res.json(false);
+    }
+  },
+
+
+
+
 }
 

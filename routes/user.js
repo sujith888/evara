@@ -31,9 +31,9 @@ router.post('/otpverify', controllers.postVerify)
 
 router.get("/image/:id", auths.userauth, auths.userBlock, userProductController.imageZoom)
 
-router.get("/add-to-cart/:id", auths.userauth, auths.userBlock, controllers.addToCart)
+router.get("/add-to-cart/:id", auths.userauth, auths.userBlock, userProductController.addToCart)
 
-router.get("/cart", auths.userauth, auths.userBlock, controllers.listCart)
+router.get("/cart", auths.userauth, auths.userBlock, userProductController.listCart)
 
 router.post('/cart',auths.userauth,userProductController.postCart)
 
@@ -81,9 +81,9 @@ router.get('/profile',auths.userauth,auths.userBlock,usercontroller.getProfile)
 
 router.post('/update_profile',auths.userauth,auths.userBlock,usercontroller.updateProfile)
 
-router.get('/reset_password',auths.userauth,auths.userBlock,userProductController.resetPassword)
+router.get('/reset_password',auths.userauth,auths.userBlock,controllers.resetPassword)
 
-router.post("/update_password",auths.userauth,auths.userBlock,userProductController.updatePassword)
+router.post("/update_password",auths.userauth,auths.userBlock,controllers.updatePassword)
 
 router.get('/view_address',auths.userauth,auths.userBlock,userProductController.getAddress)
 
@@ -94,8 +94,6 @@ router.post('/profile_add_address',auths.userauth,auths.userBlock,userProductCon
 router.get('/edit_address',auths.userauth,auths.userBlock,userProductController.getEditAddAddress)
 
 router.post('/edit_address',auths.userauth,auths.userBlock,userProductController.postEditAddress)
-
-
 
 router.delete('/delete_address',auths.userauth,auths.userBlock,userProductController.deleteAddress)
 

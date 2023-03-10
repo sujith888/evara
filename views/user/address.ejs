@@ -33,7 +33,7 @@
                                                     <h5><%=response.item.email%></h5>
                                 
                                 
-                                            <button class="btn mt-5" onclick="deleteAddress('<%=response._id%>','<%=response.item._id%>')">Delete</button>  <span><a class="btn mt-5" type="submit" href="/edit_address?addressId=<%=response.item._id%>" style="margin-left: 15rem;">Edit</a> </span>     
+                                            <button class="btn mt-5 btn-danger" onclick="deleteAddress('<%=response._id%>','<%=response.item._id%>') " style="background-color: red;">Delete</button>  <span ><a class="btn mt-5   btn-primary" type="submit" href="/edit_address?addressId=<%=response.item._id%>" style="margin-left: 15rem;background-color: coral;">Edit</a> </span>     
                                         </div>
                                         
                                         

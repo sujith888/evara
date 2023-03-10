@@ -34,5 +34,6 @@ getViewUser: (req, res)=>{
     })
   },
   
-  
+
+
 }

@@ -1,8 +1,8 @@
 const { response } = require('../../app');
 const adminCategoryHelper= require('../../helpers/adminHelpers/adminCategoryHelper');
 const { category } = require('../../models/connection');
-const user = require("../../models/connection");
-
+const db = require("../../models/connection");
+const adminOrderHelper=require('../../helpers/adminHelpers/adminOrderHelper');
 
 
 
@@ -14,7 +14,6 @@ getCategory:(req, res)=>{
     adminCategoryHelper.viewAddCategory().then((response)=>{
      var viewCategory=response
      let sub=response[0]?.subcategories
-     console.log(response[0]?.subcategories);
       res.render("admin/add-category", { layout: "adminLayout" ,viewCategory,admins,sub});
     })
     
@@ -27,10 +26,8 @@ getCategory:(req, res)=>{
       let response=await   adminCategoryHelper.viewAddCategory()
           var viewCategory=response
           let sub=response[0]?.subcategories
-          console.log(response[0]?.subcategories);
       adminCategoryHelper.addCategory(req?.body).then((data)=>{
      let categoryStatus=data.categorystatus
-     console.log(categoryStatus);
      res.render("admin/add-category", { layout: "adminLayout" ,categoryStatus,viewCategory,sub,admins});
 
 
@@ -56,13 +53,24 @@ getCategory:(req, res)=>{
   //postedit category
   
   postEditCategory:(req,res)=>{
-     console.log(req.query.edited);
-     console.log("=============edit category++++++++++++++");
+ x
      adminCategoryHelper.postEditCategory(req.query.edited,req.body).then((response)=>{
   
       res.redirect('/admin/add_category')
      })
     
   },
+ 
   
+  
+  findSubcategory: (req, res) => {
+
+    console.log(req.query.categoryName);
+    adminCategoryHelper.findSubcategory(req.query.categoryName).then((response) => {
+      let subcategories = response.subcategories
+      res.json(subcategories)
+
+    })
+  },
+
 }
